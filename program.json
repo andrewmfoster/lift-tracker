@@ -1,0 +1,472 @@
+{
+  "meso": "Meso 1",
+  "weeks": {
+    "1": {
+      "start": "2026-07-13",
+      "days": {
+        "Mon": {
+          "date": "2026-07-13",
+          "session": "A",
+          "exercises": [
+            {
+              "name": "Snatch",
+              "prescription": "build to top single — 180–185 lb — heaviest crisp single, no misses",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "180-185 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch",
+              "prescription": "back-off doubles — 3×2 @ 165 lb",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "165 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "165 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "165 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch pull",
+              "prescription": "3×3 — 200–210 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "200-210 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "200-210 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "200-210 lb"
+                }
+              ]
+            },
+            {
+              "name": "Back squat (volume)",
+              "prescription": "3×3 — 255 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "255 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "255 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "255 lb"
+                }
+              ]
+            },
+            {
+              "name": "Unilateral machine chest press",
+              "prescription": "3 × 8–12 — find RIR-3 load, log it",
+              "sets": [
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        },
+        "Tue": {
+          "date": "2026-07-14",
+          "session": "B",
+          "exercises": [
+            {
+              "name": "Hang or power snatch (tech)",
+              "prescription": "4–5×2 — 150–160 lb, crisp, no misses",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "150-160 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "150-160 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "150-160 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "150-160 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "150-160 lb"
+                }
+              ]
+            },
+            {
+              "name": "Rack jerk",
+              "prescription": "build to top single — 245–250 lb — crisp, no press-outs",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "245-250 lb"
+                }
+              ]
+            },
+            {
+              "name": "Rack jerk",
+              "prescription": "back-off doubles — 2×2 @ 230 lb",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "230 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "230 lb"
+                }
+              ]
+            },
+            {
+              "name": "Push press",
+              "prescription": "3×3–5 — ~155–165 lb (calibrate)",
+              "sets": [
+                {
+                  "reps": "3-5",
+                  "weight": "155-165 lb"
+                },
+                {
+                  "reps": "3-5",
+                  "weight": "155-165 lb"
+                },
+                {
+                  "reps": "3-5",
+                  "weight": "155-165 lb"
+                }
+              ]
+            },
+            {
+              "name": "Leg curl",
+              "prescription": "3 × 10–15 — find RIR-3 load, log it",
+              "sets": [
+                {
+                  "reps": "10-15",
+                  "weight": ""
+                },
+                {
+                  "reps": "10-15",
+                  "weight": ""
+                },
+                {
+                  "reps": "10-15",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        },
+        "Thu": {
+          "date": "2026-07-16",
+          "session": "C",
+          "exercises": [
+            {
+              "name": "Snatch or hang snatch",
+              "prescription": "top double — 160–170 lb (~90% of Monday's single)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "160-170 lb"
+                }
+              ]
+            },
+            {
+              "name": "Back squat (heavy)",
+              "prescription": "1 pause single, then 2×3 full — single ~285 lb, top sets 270 lb — or your pause+full combo style at the same loads",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "285 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "270 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "270 lb"
+                }
+              ]
+            },
+            {
+              "name": "Incline DB press or cable flye",
+              "prescription": "3 × 10–15 — find RIR-3 load, log it",
+              "sets": [
+                {
+                  "reps": "10-15",
+                  "weight": ""
+                },
+                {
+                  "reps": "10-15",
+                  "weight": ""
+                },
+                {
+                  "reps": "10-15",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "Cable crunch or ab wheel",
+              "prescription": "3 sets — RIR 3",
+              "sets": [
+                {
+                  "reps": "",
+                  "weight": ""
+                },
+                {
+                  "reps": "",
+                  "weight": ""
+                },
+                {
+                  "reps": "",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        },
+        "Fri": {
+          "date": "2026-07-17",
+          "session": "D",
+          "exercises": [
+            {
+              "name": "Clean & jerk",
+              "prescription": "build to top single — 225–230 lb — heaviest crisp single",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "225-230 lb"
+                }
+              ]
+            },
+            {
+              "name": "Clean (power OK)",
+              "prescription": "back-off doubles — 2–3×2 @ 210 lb",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "210 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "210 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "210 lb"
+                }
+              ]
+            },
+            {
+              "name": "Clean pull",
+              "prescription": "3×3 — 250–265 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "250-265 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "250-265 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "250-265 lb"
+                }
+              ]
+            },
+            {
+              "name": "Front squat",
+              "prescription": "2×3 — 225 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "225 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "225 lb"
+                }
+              ]
+            },
+            {
+              "name": "Hanging leg raise",
+              "prescription": "3 sets",
+              "sets": [
+                {
+                  "reps": "",
+                  "weight": ""
+                },
+                {
+                  "reps": "",
+                  "weight": ""
+                },
+                {
+                  "reps": "",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        },
+        "Sat": {
+          "date": "2026-07-18",
+          "session": "Aux",
+          "exercises": [
+            {
+              "name": "Machine chest press (diff. angle than Mon)",
+              "prescription": "3 × 8–12 — find RIR-3 load, log it",
+              "sets": [
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "Cable flye",
+              "prescription": "2 × 12–15 — find RIR-3 load, log it",
+              "sets": [
+                {
+                  "reps": "12-15",
+                  "weight": ""
+                },
+                {
+                  "reps": "12-15",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "Hip thrust",
+              "prescription": "3 × 8–12 — find RIR-3 load, log it",
+              "sets": [
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "RDL (leg curl was Tue)",
+              "prescription": "3 × 8–10 — ~175–200 lb, RIR 3",
+              "sets": [
+                {
+                  "reps": "8-10",
+                  "weight": "175-200 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "175-200 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "175-200 lb"
+                }
+              ]
+            },
+            {
+              "name": "Plate-loaded pulldown",
+              "prescription": "4 × 8–12 — find RIR-3 load, log it",
+              "sets": [
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "Abs",
+              "prescription": "2 sets",
+              "sets": [
+                {
+                  "reps": "",
+                  "weight": ""
+                },
+                {
+                  "reps": "",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "Lateral raise (optional)",
+              "prescription": "3 × 15 — skip freely",
+              "sets": [
+                {
+                  "reps": "15",
+                  "weight": ""
+                },
+                {
+                  "reps": "15",
+                  "weight": ""
+                },
+                {
+                  "reps": "15",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080C18">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Lift</title>
+<style>
+  :root {
+    --bg: #080C18; --card: #101627; --line: #1d2740;
+    --text: #e8ecf4; --dim: #7a8699; --accent: #5C8CB0;
+    --done: #4caf7d; --warn: #d9a441;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.45 -apple-system, system-ui, sans-serif;
+    padding: env(safe-area-inset-top) 0 40px;
+  }
+  header {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 14px 16px 6px;
+  }
+  header h1 { font-size: 17px; margin: 0; letter-spacing: .06em; }
+  #sync {
+    margin-left: auto; font-size: 12px; color: var(--dim);
+  }
+  #sync.pending { color: var(--warn); }
+  #sync.ok { color: var(--done); }
+  nav { display: flex; gap: 6px; padding: 6px 16px 10px; overflow-x: auto; }
+  nav button {
+    flex: 1; min-width: 44px; padding: 9px 0; border-radius: 9px;
+    border: 1px solid var(--line); background: var(--card); color: var(--dim);
+    font-size: 13px; font-weight: 600;
+  }
+  nav button.today { border-color: var(--accent); }
+  nav button.active { background: var(--accent); color: #06101c; border-color: var(--accent); }
+  #weekbar {
+    display: flex; align-items: center; gap: 12px; padding: 0 16px 4px;
+    color: var(--dim); font-size: 13px;
+  }
+  #weekbar select {
+    background: var(--card); color: var(--text); border: 1px solid var(--line);
+    border-radius: 7px; padding: 4px 8px; font-size: 13px;
+  }
+  main { padding: 4px 12px; }
+  .ex {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; margin-bottom: 10px; padding: 12px 12px 8px;
+  }
+  .ex h2 { margin: 0; font-size: 15px; }
+  .ex .rx { color: var(--dim); font-size: 12.5px; margin: 3px 0 8px; }
+  .set {
+    display: flex; align-items: center; gap: 10px; padding: 5px 0;
+  }
+  .tick {
+    width: 44px; height: 44px; border-radius: 10px; flex: none;
+    border: 1.5px solid var(--line); background: transparent;
+    color: transparent; font-size: 20px;
+  }
+  .set.done .tick { background: var(--done); border-color: var(--done); color: #06101c; }
+  .set input {
+    width: 0; min-width: 0; flex: 1; padding: 10px 8px; border-radius: 8px;
+    border: 1px solid var(--line); background: #0b1120; color: var(--text);
+    font-size: 16px; text-align: center;
+  }
+  .set input::placeholder { color: #4a5568; }
+  .set .x { color: var(--dim); flex: none; font-size: 13px; }
+  .notebtn {
+    background: none; border: none; color: var(--dim); font-size: 13px;
+    padding: 6px 0 4px; text-align: left;
+  }
+  .ex textarea, #sessionnote textarea {
+    width: 100%; min-height: 64px; margin-top: 4px;
+    background: #0b1120; color: var(--text); border: 1px solid var(--line);
+    border-radius: 8px; padding: 8px; font: 15px/1.4 inherit;
+  }
+  .ex textarea.hide { display: none; }
+  #sessionnote { margin: 18px 0 10px; }
+  #sessionnote h2 { font-size: 14px; color: var(--dim); margin: 0 0 2px; letter-spacing: .05em; }
+  .rest { text-align: center; color: var(--dim); padding: 60px 0; font-size: 15px; }
+  /* login */
+  #login { padding: 60px 24px; max-width: 360px; margin: 0 auto; }
+  #login input {
+    width: 100%; margin-bottom: 10px; padding: 12px; border-radius: 9px;
+    border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 16px;
+  }
+  #login button {
+    width: 100%; padding: 13px; border-radius: 9px; border: none;
+    background: var(--accent); color: #06101c; font-size: 16px; font-weight: 700;
+  }
+  #loginerr { color: var(--warn); font-size: 13px; min-height: 20px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+/* ---- config (filled at deploy; anon key is public by design, RLS guards data) ---- */
+const SUPABASE_URL = "__SUPABASE_URL__";
+const SUPABASE_ANON = "__SUPABASE_ANON__";
+
+const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const LS = {
+  queue: "lift.queue", session: "lift.auth", week: "lift.week",
+  draft: "lift.draft" // local mirror of row state so reopening shows ticks
+};
+
+let PROGRAM = null;
+let state = { week: null, day: null };
+let draft = JSON.parse(localStorage.getItem(LS.draft) || "{}");
+let queue = JSON.parse(localStorage.getItem(LS.queue) || "{}");
+let auth = JSON.parse(localStorage.getItem(LS.session) || "null");
+
+/* ---------------- auth (Supabase GoTrue REST, no SDK) ---------------- */
+async function login(email, password) {
+  const r = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+    method: "POST",
+    headers: { "content-type": "application/json", apikey: SUPABASE_ANON },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!r.ok) throw new Error((await r.json()).error_description || "login failed");
+  auth = await r.json();
+  auth.expires_at = Date.now() / 1000 + auth.expires_in - 60;
+  localStorage.setItem(LS.session, JSON.stringify(auth));
+}
+async function token() {
+  if (!auth) throw new Error("no auth");
+  if (Date.now() / 1000 > auth.expires_at) {
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+      method: "POST",
+      headers: { "content-type": "application/json", apikey: SUPABASE_ANON },
+      body: JSON.stringify({ refresh_token: auth.refresh_token }),
+    });
+    if (!r.ok) { auth = null; localStorage.removeItem(LS.session); render(); throw new Error("session expired"); }
+    auth = await r.json();
+    auth.expires_at = Date.now() / 1000 + auth.expires_in - 60;
+    localStorage.setItem(LS.session, JSON.stringify(auth));
+  }
+  return auth.access_token;
+}
+
+/* ---------------- offline-first queue → Supabase upserts ---------------- */
+function enqueue(table, row) {
+  queue[`${table}:${row.id}`] = { table, row, ts: Date.now() };
+  localStorage.setItem(LS.queue, JSON.stringify(queue));
+  syncStatus();
+  flush();
+}
+let flushing = false;
+async function flush() {
+  if (flushing || !navigator.onLine || !auth) return;
+  flushing = true;
+  try {
+    const keys = Object.keys(queue);
+    if (!keys.length) return;
+    const t = await token();
+    const byTable = {};
+    for (const k of keys) (byTable[queue[k].table] ||= []).push(queue[k].row);
+    for (const [table, rows] of Object.entries(byTable)) {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?on_conflict=id`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json", apikey: SUPABASE_ANON,
+          authorization: `Bearer ${t}`,
+          prefer: "resolution=merge-duplicates,return=minimal",
+        },
+        body: JSON.stringify(rows),
+      });
+      if (!r.ok) throw new Error(`${table}: ${r.status}`);
+      for (const row of rows) delete queue[`${table}:${row.id}`];
+      localStorage.setItem(LS.queue, JSON.stringify(queue));
+    }
+  } catch (e) { /* stay queued; retry on interval/online */ }
+  finally { flushing = false; syncStatus(); }
+}
+window.addEventListener("online", flush);
+setInterval(flush, 15000);
+
+function syncStatus() {
+  const el = document.getElementById("sync");
+  if (!el) return;
+  const n = Object.keys(queue).length;
+  if (!navigator.onLine) { el.textContent = `offline · ${n} queued`; el.className = "pending"; }
+  else if (n) { el.textContent = `syncing ${n}…`; el.className = "pending"; }
+  else { el.textContent = "synced"; el.className = "ok"; }
+}
+
+/* ---------------- row builders ---------------- */
+function setRow(week, day, ei, si) {
+  const d = PROGRAM.weeks[week].days[day];
+  const ex = d.exercises[ei];
+  const id = `w${week}-${day}-e${ei}-s${si}`;
+  const st = draft[id] || {};
+  return {
+    id, session_date: d.date, week: +week, day,
+    exercise: ex.name, ex_index: ei, set_index: si,
+    planned_reps: ex.sets[si].reps, planned_weight: ex.sets[si].weight,
+    actual_reps: st.reps ?? ex.sets[si].reps,
+    actual_weight: st.weight ?? ex.sets[si].weight,
+    done: !!st.done, ts: new Date().toISOString(),
+  };
+}
+function noteRow(week, day, scope, ei) {
+  const d = PROGRAM.weeks[week].days[day];
+  const id = scope === "session" ? `note-w${week}-${day}` : `note-w${week}-${day}-e${ei}`;
+  const st = draft[id] || {};
+  return {
+    id, session_date: d.date, scope,
+    exercise: scope === "exercise" ? d.exercises[ei].name : null,
+    body: st.body || "", ts: new Date().toISOString(),
+  };
+}
+function saveDraft(id, patch) {
+  draft[id] = { ...(draft[id] || {}), ...patch };
+  localStorage.setItem(LS.draft, JSON.stringify(draft));
+}
+
+/* ---------------- UI ---------------- */
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "class") el.className = v;
+    else el.setAttribute(k, v);
+  }
+  for (const kid of kids.flat()) if (kid != null) el.append(kid);
+  return el;
+}
+
+function pickDefault() {
+  const weeks = Object.keys(PROGRAM.weeks);
+  const todayISO = new Date().toISOString().slice(0, 10);
+  let best = { week: weeks[weeks.length - 1], day: null };
+  for (const w of weeks) for (const [d, v] of Object.entries(PROGRAM.weeks[w].days)) {
+    if (v.date === todayISO) return { week: w, day: d };
+    if (v.date >= todayISO && (!best.hit || v.date < best.hit)) best = { week: w, day: d, hit: v.date };
+  }
+  return { week: best.week, day: best.day || Object.keys(PROGRAM.weeks[best.week].days)[0] };
+}
+
+function render() {
+  const app = document.getElementById("app");
+  app.replaceChildren();
+  if (SUPABASE_URL.startsWith("__")) {
+    app.append(h("div", { class: "rest" }, "Supabase not configured — fill SUPABASE_URL / SUPABASE_ANON."));
+    return;
+  }
+  if (!auth) return renderLogin(app);
+  const wk = PROGRAM.weeks[state.week];
+
+  app.append(
+    h("header", null,
+      h("h1", null, `WEEK ${state.week} · ${wk.days[state.day] ? wk.days[state.day].session : "REST"}`),
+      h("span", { id: "sync" })),
+    h("div", { id: "weekbar" },
+      h("select", {
+        onchange: (e) => { state.week = e.target.value; localStorage.setItem(LS.week, state.week); render(); },
+      }, Object.keys(PROGRAM.weeks).map((w) =>
+        h("option", { value: w, ...(w === state.week ? { selected: "" } : {}) }, `Week ${w} — ${PROGRAM.weeks[w].start}`))),
+      h("span", null, wk.days[state.day] ? wk.days[state.day].date : "")),
+    h("nav", null, DAYS.slice(1).concat("Sun").map((d) => {
+      const has = !!wk.days[d];
+      const todayName = DAYS[new Date().getDay()];
+      return h("button", {
+        class: (d === state.day ? "active" : "") + (d === todayName ? " today" : ""),
+        onclick: () => { state.day = d; render(); },
+      }, has ? d : d + " ·");
+    })),
+    h("main", { id: "main" }));
+
+  const main = document.getElementById("main");
+  const day = wk.days[state.day];
+  if (!day) { main.append(h("div", { class: "rest" }, "Rest day.")); syncStatus(); return; }
+
+  day.exercises.forEach((ex, ei) => {
+    const noteId = `note-w${state.week}-${state.day}-e${ei}`;
+    const noteSt = draft[noteId] || {};
+    const ta = h("textarea", {
+      class: noteSt.body ? "" : "hide", placeholder: "note…",
+      onchange: (e) => { saveDraft(noteId, { body: e.target.value }); enqueue("lift_notes", noteRow(state.week, state.day, "exercise", ei)); },
+    }, noteSt.body || "");
+    main.append(h("section", { class: "ex" },
+      h("h2", null, ex.name),
+      h("div", { class: "rx" }, ex.prescription),
+      ex.sets.map((s, si) => {
+        const id = `w${state.week}-${state.day}-e${ei}-s${si}`;
+        const st = draft[id] || {};
+        const row = h("div", { class: "set" + (st.done ? " done" : "") },
+          h("button", { class: "tick", onclick: () => {
+            saveDraft(id, { done: !(draft[id] || {}).done });
+            enqueue("lift_sets", setRow(state.week, state.day, ei, si));
+            row.classList.toggle("done");
+          } }, "✓"),
+          h("input", { inputmode: "numeric", placeholder: s.reps || "reps", value: st.reps ?? "",
+            onchange: (e) => { saveDraft(id, { reps: e.target.value }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); } }),
+          h("span", { class: "x" }, "×"),
+          h("input", { inputmode: "decimal", placeholder: s.weight || "lb", value: st.weight ?? "",
+            onchange: (e) => { saveDraft(id, { weight: e.target.value }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); } }));
+        return row;
+      }),
+      h("button", { class: "notebtn", onclick: () => ta.classList.toggle("hide") }, "＋ note"),
+      ta));
+  });
+
+  const snId = `note-w${state.week}-${state.day}`;
+  main.append(h("div", { id: "sessionnote" },
+    h("h2", null, "SESSION NOTES — feedback for the program"),
+    h("textarea", {
+      placeholder: "volume, difficulty, swaps, aches…",
+      onchange: (e) => { saveDraft(snId, { body: e.target.value }); enqueue("lift_notes", noteRow(state.week, state.day, "session")); },
+    }, (draft[snId] || {}).body || "")));
+  syncStatus();
+}
+
+function renderLogin(app) {
+  const email = h("input", { type: "email", placeholder: "email", autocomplete: "username" });
+  const pass = h("input", { type: "password", placeholder: "password", autocomplete: "current-password" });
+  const err = h("div", { id: "loginerr" });
+  app.append(h("div", { id: "login" },
+    h("h1", null, "Lift"), email, pass, err,
+    h("button", { onclick: async () => {
+      try { await login(email.value.trim(), pass.value); render(); flush(); }
+      catch (e) { err.textContent = e.message; }
+    } }, "Log in")));
+}
+
+/* ---------------- boot ---------------- */
+fetch("program.json").then((r) => r.json()).then((p) => {
+  PROGRAM = p;
+  const def = pickDefault();
+  state.week = localStorage.getItem(LS.week) || def.week;
+  if (!PROGRAM.weeks[state.week]) state.week = def.week;
+  state.day = def.day;
+  render();
+});
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+</script>
+</body>
+</html>

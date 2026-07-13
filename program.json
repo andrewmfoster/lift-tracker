@@ -9,6 +9,42 @@
           "session": "A",
           "exercises": [
             {
+              "name": "Snatch — warmup complex (1 pwr + 1 full)",
+              "prescription": "4×2 — ramp 95–150 lb (95 / 115 / 135 / 150)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "95-150 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "95-150 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "95-150 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "95-150 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch — ramp singles",
+              "prescription": "2×1 — 165–175 lb (165 / 175)",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "165-175 lb"
+                },
+                {
+                  "reps": "1",
+                  "weight": "165-175 lb"
+                }
+              ]
+            },
+            {
               "name": "Snatch",
               "prescription": "build to top single — 180–185 lb — heaviest crisp single, no misses",
               "sets": [
@@ -55,6 +91,24 @@
               ]
             },
             {
+              "name": "Back squat — warmup ramp",
+              "prescription": "3×3 — ramp 135–225 lb (135 / 185 / 225)",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "135-225 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "135-225 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "135-225 lb"
+                }
+              ]
+            },
+            {
               "name": "Back squat (volume)",
               "prescription": "3×3 — 255 lb",
               "sets": [
@@ -97,6 +151,24 @@
           "session": "B",
           "exercises": [
             {
+              "name": "Snatch — warmup ramp",
+              "prescription": "3×2 — ramp 95–135 lb (95 / 115 / 135)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "95-135 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "95-135 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "95-135 lb"
+                }
+              ]
+            },
+            {
               "name": "Hang or power snatch (tech)",
               "prescription": "4–5×2 — 150–160 lb, crisp, no misses",
               "sets": [
@@ -119,6 +191,38 @@
                 {
                   "reps": "2",
                   "weight": "150-160 lb"
+                }
+              ]
+            },
+            {
+              "name": "Rack jerk — warmup doubles",
+              "prescription": "3×2 — ramp 135–205 lb (135 / 165 / 205)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "135-205 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-205 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-205 lb"
+                }
+              ]
+            },
+            {
+              "name": "Rack jerk — ramp singles",
+              "prescription": "2×1 — 225–235 lb (225 / 235)",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "225-235 lb"
+                },
+                {
+                  "reps": "1",
+                  "weight": "225-235 lb"
                 }
               ]
             },
@@ -189,12 +293,62 @@
           "session": "C",
           "exercises": [
             {
+              "name": "Snatch — warmup complex (1 pwr + 1 full)",
+              "prescription": "3×2 — ramp 95–135 lb (95 / 115 / 135)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "95-135 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "95-135 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "95-135 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch — ramp single",
+              "prescription": "1×1 — 150 lb",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "150 lb"
+                }
+              ]
+            },
+            {
               "name": "Snatch or hang snatch",
               "prescription": "top double — 160–170 lb (~90% of Monday's single)",
               "sets": [
                 {
                   "reps": "2",
                   "weight": "160-170 lb"
+                }
+              ]
+            },
+            {
+              "name": "Back squat — warmup ramp",
+              "prescription": "4×2–3 — ramp 135–255 lb (135 / 185 / 225 / 255)",
+              "sets": [
+                {
+                  "reps": "2-3",
+                  "weight": "135-255 lb"
+                },
+                {
+                  "reps": "2-3",
+                  "weight": "135-255 lb"
+                },
+                {
+                  "reps": "2-3",
+                  "weight": "135-255 lb"
+                },
+                {
+                  "reps": "2-3",
+                  "weight": "135-255 lb"
                 }
               ]
             },
@@ -259,6 +413,38 @@
           "session": "D",
           "exercises": [
             {
+              "name": "C&J — warmup complex (pwr cln + jerk → full)",
+              "prescription": "3×2 — ramp 135–190 lb (135 / 165 / 190)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "135-190 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-190 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-190 lb"
+                }
+              ]
+            },
+            {
+              "name": "C&J — ramp singles",
+              "prescription": "2×1 — 205–215 lb (205 / 215)",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "205-215 lb"
+                },
+                {
+                  "reps": "1",
+                  "weight": "205-215 lb"
+                }
+              ]
+            },
+            {
               "name": "Clean & jerk",
               "prescription": "build to top single — 225–230 lb — heaviest crisp single",
               "sets": [
@@ -301,6 +487,20 @@
                 {
                   "reps": "3",
                   "weight": "250-265 lb"
+                }
+              ]
+            },
+            {
+              "name": "Front squat — warmup ramp",
+              "prescription": "2×3 — ramp 135–185 lb (135 / 185)",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "135-185 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "135-185 lb"
                 }
               ]
             },
@@ -428,6 +628,38 @@
                 },
                 {
                   "reps": "8-12",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "Chest-supported or cable row",
+              "prescription": "3 × 10–12 — find RIR-3 load, log it",
+              "sets": [
+                {
+                  "reps": "10-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "10-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "10-12",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "Rear-delt flye",
+              "prescription": "2 × 15 — find RIR-3 load, log it",
+              "sets": [
+                {
+                  "reps": "15",
+                  "weight": ""
+                },
+                {
+                  "reps": "15",
                   "weight": ""
                 }
               ]

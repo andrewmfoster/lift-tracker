@@ -330,6 +330,7 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
+const BUILD = "e33ae0f+stamp";
 fetch("program.json").then((r) => r.json()).then((p) => {
   PROGRAM = p;
   const def = pickDefault();
@@ -337,6 +338,14 @@ fetch("program.json").then((r) => r.json()).then((p) => {
   if (!PROGRAM.weeks[state.week]) state.week = def.week;
   state.day = def.day;
   render();
+  const stamp = document.createElement("div");
+  stamp.style.cssText = "opacity:.4;font-size:11px;text-align:center;padding:8px";
+  navigator.serviceWorker?.getRegistration().then((reg) =>
+    caches.keys().then((keys) => {
+      stamp.textContent = `build ${BUILD} · sw ${reg ? (reg.active ? "active" : "installing") : "none"} · cache ${keys.join(",") || "none"}`;
+      document.body.append(stamp);
+    })
+  ).catch(() => { stamp.textContent = `build ${BUILD}`; document.body.append(stamp); });
 });
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
 </script>

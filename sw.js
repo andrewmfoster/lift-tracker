@@ -1,6 +1,6 @@
-// stale-while-revalidate for same-origin assets: instant offline open,
-// program.json updates arrive in the background (visible next open).
-const CACHE = "lift-v1";
+// program.json is network-first (fresh program on every online open, cache only
+// as offline fallback); other same-origin assets stay stale-while-revalidate.
+const CACHE = "lift-v2";
 const ASSETS = ["./", "index.html", "program.json", "manifest.json", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", (e) => {
@@ -15,6 +15,17 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
   if (url.origin !== location.origin || e.request.method !== "GET") return; // Supabase → network
+  if (url.pathname.endsWith("/program.json")) {
+    e.respondWith(
+      fetch(e.request)
+        .then((res) => {
+          if (res.ok) caches.open(CACHE).then((c) => c.put(e.request, res.clone()));
+          return res;
+        })
+        .catch(() => caches.match(e.request))
+    );
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then((cached) => {
       const fresh = fetch(e.request)

@@ -148,52 +148,8 @@
         },
         "Tue": {
           "date": "2026-07-14",
-          "session": "B",
+          "session": "B *(revised 07-14: no snatch, no push press — rack jerk → hang cleans, shoulders via aux)*",
           "exercises": [
-            {
-              "name": "Snatch — warmup ramp",
-              "prescription": "3×2 — ramp 95–135 lb (95 / 115 / 135)",
-              "sets": [
-                {
-                  "reps": "2",
-                  "weight": "95-135 lb"
-                },
-                {
-                  "reps": "2",
-                  "weight": "95-135 lb"
-                },
-                {
-                  "reps": "2",
-                  "weight": "95-135 lb"
-                }
-              ]
-            },
-            {
-              "name": "Hang or power snatch (tech)",
-              "prescription": "4–5×2 — 150–160 lb, crisp, no misses",
-              "sets": [
-                {
-                  "reps": "2",
-                  "weight": "150-160 lb"
-                },
-                {
-                  "reps": "2",
-                  "weight": "150-160 lb"
-                },
-                {
-                  "reps": "2",
-                  "weight": "150-160 lb"
-                },
-                {
-                  "reps": "2",
-                  "weight": "150-160 lb"
-                },
-                {
-                  "reps": "2",
-                  "weight": "150-160 lb"
-                }
-              ]
-            },
             {
               "name": "Rack jerk — warmup doubles",
               "prescription": "3×2 — ramp 135–205 lb (135 / 165 / 205)",
@@ -251,20 +207,74 @@
               ]
             },
             {
-              "name": "Push press",
-              "prescription": "3×3–5 — ~155–165 lb (calibrate)",
+              "name": "Hang clean — warmup doubles",
+              "prescription": "2×2 — ramp 135–165 lb (135 / 165)",
               "sets": [
                 {
-                  "reps": "3-5",
-                  "weight": "155-165 lb"
+                  "reps": "2",
+                  "weight": "135-165 lb"
                 },
                 {
-                  "reps": "3-5",
-                  "weight": "155-165 lb"
+                  "reps": "2",
+                  "weight": "135-165 lb"
+                }
+              ]
+            },
+            {
+              "name": "Hang clean (tech)",
+              "prescription": "4×2 — 185–200 lb, crisp; top set to ~210 if speed holds",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "185-200 lb"
                 },
                 {
-                  "reps": "3-5",
-                  "weight": "155-165 lb"
+                  "reps": "2",
+                  "weight": "185-200 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "185-200 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "185-200 lb"
+                }
+              ]
+            },
+            {
+              "name": "Unilateral DB shoulder press",
+              "prescription": "3 × 8–12 — find RIR-3 load, log it",
+              "sets": [
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                },
+                {
+                  "reps": "8-12",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "DB lateral raise",
+              "prescription": "3 × 12–15 — find RIR-3 load, log it",
+              "sets": [
+                {
+                  "reps": "12-15",
+                  "weight": ""
+                },
+                {
+                  "reps": "12-15",
+                  "weight": ""
+                },
+                {
+                  "reps": "12-15",
+                  "weight": ""
                 }
               ]
             },

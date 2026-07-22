@@ -159,9 +159,12 @@ async function flush() {
     const keys = Object.keys(queue);
     if (!keys.length) return;
     const t = await token();
+    // snapshot the exact entry sent per key; a re-tick during the in-flight POST
+    // replaces queue[k] with a new object, so ref-compare before deleting or we'd
+    // drop the newer, never-sent row (was: done ticks lost, reps/weight kept).
     const byTable = {};
-    for (const k of keys) (byTable[queue[k].table] ||= []).push(queue[k].row);
-    for (const [table, rows] of Object.entries(byTable)) {
+    for (const k of keys) (byTable[queue[k].table] ||= []).push({ key: k, entry: queue[k] });
+    for (const [table, items] of Object.entries(byTable)) {
       const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?on_conflict=id`, {
         method: "POST",
         headers: {
@@ -169,10 +172,10 @@ async function flush() {
           authorization: `Bearer ${t}`,
           prefer: "resolution=merge-duplicates,return=minimal",
         },
-        body: JSON.stringify(rows),
+        body: JSON.stringify(items.map((i) => i.entry.row)),
       });
       if (!r.ok) throw new Error(`${table}: ${r.status}`);
-      for (const row of rows) delete queue[`${table}:${row.id}`];
+      for (const { key, entry } of items) if (queue[key] === entry) delete queue[key];
       localStorage.setItem(LS.queue, JSON.stringify(queue));
     }
   } catch (e) { /* stay queued; retry on interval/online */ }
@@ -330,7 +333,7 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "e33ae0f+stamp";
+const BUILD = "flush-race-fix";
 fetch("program.json").then((r) => r.json()).then((p) => {
   PROGRAM = p;
   const def = pickDefault();

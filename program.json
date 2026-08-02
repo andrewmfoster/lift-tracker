@@ -1459,15 +1459,15 @@
               "sets": [
                 {
                   "reps": "15",
-                  "weight": "5 lb"
+                  "weight": "17.5 lb"
                 },
                 {
                   "reps": "15",
-                  "weight": "5 lb"
+                  "weight": "17.5 lb"
                 },
                 {
                   "reps": "15",
-                  "weight": "5 lb"
+                  "weight": "17.5 lb"
                 }
               ]
             }
@@ -1780,15 +1780,15 @@
               "sets": [
                 {
                   "reps": "12-15",
-                  "weight": "5 lb"
+                  "weight": "17.5 lb"
                 },
                 {
                   "reps": "12-15",
-                  "weight": "5 lb"
+                  "weight": "17.5 lb"
                 },
                 {
                   "reps": "12-15",
-                  "weight": "5 lb"
+                  "weight": "17.5 lb"
                 }
               ]
             },
@@ -2228,15 +2228,760 @@
               "sets": [
                 {
                   "reps": "15",
-                  "weight": "5 lb"
+                  "weight": "17.5 lb"
                 },
                 {
                   "reps": "15",
-                  "weight": "5 lb"
+                  "weight": "17.5 lb"
                 },
                 {
                   "reps": "15",
-                  "weight": "5 lb"
+                  "weight": "17.5 lb"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "4": {
+      "start": "2026-08-03",
+      "days": {
+        "Mon": {
+          "date": "2026-08-03",
+          "session": "A",
+          "exercises": [
+            {
+              "name": "Snatch — warmup complex (1 pwr + 1 full)",
+              "prescription": "3×2 — ramp 115–155 lb (115 / 135 / 155)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "115-155 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "115-155 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "115-155 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch — ramp singles",
+              "prescription": "2×1 — 165–175 lb (165 / 175)",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "165-175 lb"
+                },
+                {
+                  "reps": "1",
+                  "weight": "165-175 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch",
+              "prescription": "build to top single — 185–190 lb — crisp only, this is a back-off week",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "185-190 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch",
+              "prescription": "back-off doubles — 2×2 @ 170 lb",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "170 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "170 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch pull",
+              "prescription": "3×3 — 225 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "225 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "225 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "225 lb"
+                }
+              ]
+            },
+            {
+              "name": "Back squat — warmup ramp",
+              "prescription": "3×3 — ramp 175–245 lb (175 / 215 / 245)",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "175-245 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "175-245 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "175-245 lb"
+                }
+              ]
+            },
+            {
+              "name": "Back squat (volume)",
+              "prescription": "3×3 — 275 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "275 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "275 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "275 lb"
+                }
+              ]
+            },
+            {
+              "name": "Unilateral machine chest press",
+              "prescription": "4 × 8–12 — 110 lb — RIR 0–1, chase 12",
+              "sets": [
+                {
+                  "reps": "8-12",
+                  "weight": "110 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "110 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "110 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "110 lb"
+                }
+              ]
+            },
+            {
+              "name": "Unilateral machine incline press",
+              "prescription": "4 × 8–12 — 130 lb (12×120 was clean ×3)",
+              "sets": [
+                {
+                  "reps": "8-12",
+                  "weight": "130 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "130 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "130 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "130 lb"
+                }
+              ]
+            },
+            {
+              "name": "Hanging knee raise",
+              "prescription": "3 × 12",
+              "sets": [
+                {
+                  "reps": "12",
+                  "weight": ""
+                },
+                {
+                  "reps": "12",
+                  "weight": ""
+                },
+                {
+                  "reps": "12",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        },
+        "Tue": {
+          "date": "2026-08-04",
+          "session": "B",
+          "exercises": [
+            {
+              "name": "Rack jerk — warmup doubles",
+              "prescription": "4×2 — ramp 135–225 lb (135 / 175 / 205 / 225)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "135-225 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-225 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-225 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-225 lb"
+                }
+              ]
+            },
+            {
+              "name": "Rack jerk",
+              "prescription": "top double — 250 lb — double, not a single, this week",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "250 lb"
+                }
+              ]
+            },
+            {
+              "name": "Rack jerk",
+              "prescription": "back-off doubles — 2×2 @ 230 lb",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "230 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "230 lb"
+                }
+              ]
+            },
+            {
+              "name": "Hang clean — warmup doubles",
+              "prescription": "2×2 — ramp 135–185 lb (135 / 185)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "135-185 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-185 lb"
+                }
+              ]
+            },
+            {
+              "name": "Hang clean (tech)",
+              "prescription": "4×2 — 215 lb, crisp; stop the slot if speed dips",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "215 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "215 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "215 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "215 lb"
+                }
+              ]
+            },
+            {
+              "name": "Unilateral machine shoulder press",
+              "prescription": "3 × 8–12 — 140 lb (10×130 ×3 was RIR ≥2)",
+              "sets": [
+                {
+                  "reps": "8-12",
+                  "weight": "140 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "140 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "140 lb"
+                }
+              ]
+            },
+            {
+              "name": "DB lateral raise (seated)",
+              "prescription": "3 × 12–15 — 17.5 lb/DB",
+              "sets": [
+                {
+                  "reps": "12-15",
+                  "weight": "17.5 lb"
+                },
+                {
+                  "reps": "12-15",
+                  "weight": "17.5 lb"
+                },
+                {
+                  "reps": "12-15",
+                  "weight": "17.5 lb"
+                }
+              ]
+            },
+            {
+              "name": "Leg curl",
+              "prescription": "5 × 10–15 — 100 lb — 5th set added, hams peak week",
+              "sets": [
+                {
+                  "reps": "10-15",
+                  "weight": "100 lb"
+                },
+                {
+                  "reps": "10-15",
+                  "weight": "100 lb"
+                },
+                {
+                  "reps": "10-15",
+                  "weight": "100 lb"
+                },
+                {
+                  "reps": "10-15",
+                  "weight": "100 lb"
+                },
+                {
+                  "reps": "10-15",
+                  "weight": "100 lb"
+                }
+              ]
+            }
+          ]
+        },
+        "Thu": {
+          "date": "2026-08-06",
+          "session": "C",
+          "exercises": [
+            {
+              "name": "Snatch — warmup complex (1 pwr + 1 full)",
+              "prescription": "3×2 — ramp 115–155 lb (115 / 135 / 155)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "115-155 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "115-155 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "115-155 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch — ramp single",
+              "prescription": "1×1 — 165 lb",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "165 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch or hang snatch",
+              "prescription": "top double — 170–175 lb (~90% of Monday's single)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "170-175 lb"
+                }
+              ]
+            },
+            {
+              "name": "Back squat — warmup ramp",
+              "prescription": "4×2–3 — ramp 175–265 lb (175 / 225 / 265)",
+              "sets": [
+                {
+                  "reps": "2-3",
+                  "weight": "175-265 lb"
+                },
+                {
+                  "reps": "2-3",
+                  "weight": "175-265 lb"
+                },
+                {
+                  "reps": "2-3",
+                  "weight": "175-265 lb"
+                },
+                {
+                  "reps": "2-3",
+                  "weight": "175-265 lb"
+                }
+              ]
+            },
+            {
+              "name": "Back squat (heavy)",
+              "prescription": "2×3 — 290 lb — triples this week, no top single",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "290 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "290 lb"
+                }
+              ]
+            },
+            {
+              "name": "Incline DB / machine press",
+              "prescription": "3 × 10–15 — 130 lb (10×120 ×3 was RIR ≥2)",
+              "sets": [
+                {
+                  "reps": "10-15",
+                  "weight": "130 lb"
+                },
+                {
+                  "reps": "10-15",
+                  "weight": "130 lb"
+                },
+                {
+                  "reps": "10-15",
+                  "weight": "130 lb"
+                }
+              ]
+            },
+            {
+              "name": "Cable flye",
+              "prescription": "3 × 12–15 — 15 lb/side (corrected — wk3 ran 15, doc said 20)",
+              "sets": [
+                {
+                  "reps": "12-15",
+                  "weight": "15 lb"
+                },
+                {
+                  "reps": "12-15",
+                  "weight": "15 lb"
+                },
+                {
+                  "reps": "12-15",
+                  "weight": "15 lb"
+                }
+              ]
+            },
+            {
+              "name": "Cable crunch or ab wheel",
+              "prescription": "3 × 12–15 — 80 lb, RIR 0–1",
+              "sets": [
+                {
+                  "reps": "12-15",
+                  "weight": "80 lb"
+                },
+                {
+                  "reps": "12-15",
+                  "weight": "80 lb"
+                },
+                {
+                  "reps": "12-15",
+                  "weight": "80 lb"
+                }
+              ]
+            }
+          ]
+        },
+        "Fri": {
+          "date": "2026-08-07",
+          "session": "D",
+          "exercises": [
+            {
+              "name": "C&J — warmup complex (pwr cln + jerk → full)",
+              "prescription": "3×2 — ramp 135–205 lb (135 / 175 / 205)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "135-205 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-205 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-205 lb"
+                }
+              ]
+            },
+            {
+              "name": "C&J — ramp singles",
+              "prescription": "2×1 — 215–235 lb (215 / 235)",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "215-235 lb"
+                },
+                {
+                  "reps": "1",
+                  "weight": "215-235 lb"
+                }
+              ]
+            },
+            {
+              "name": "Clean & jerk",
+              "prescription": "build to top single — 245–250 lb — back-off week, stop crisp",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "245-250 lb"
+                }
+              ]
+            },
+            {
+              "name": "Clean (power OK)",
+              "prescription": "back-off doubles — 2×2 @ 220 lb",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "220 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "220 lb"
+                }
+              ]
+            },
+            {
+              "name": "Clean pull",
+              "prescription": "3×3 — 275 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "275 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "275 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "275 lb"
+                }
+              ]
+            },
+            {
+              "name": "Front squat — warmup ramp",
+              "prescription": "2×3 — ramp 135–205 lb (135 / 205)",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "135-205 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "135-205 lb"
+                }
+              ]
+            },
+            {
+              "name": "Front squat",
+              "prescription": "2×3 — 240 lb — triples this week",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "240 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "240 lb"
+                }
+              ]
+            },
+            {
+              "name": "Plate-loaded pulldown",
+              "prescription": "5 × 8–12 — 120 lb (12×110 ×4 = top of range)",
+              "sets": [
+                {
+                  "reps": "8-12",
+                  "weight": "120 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "120 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "120 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "120 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "120 lb"
+                }
+              ]
+            },
+            {
+              "name": "Hanging leg raise",
+              "prescription": "3 × 15",
+              "sets": [
+                {
+                  "reps": "15",
+                  "weight": ""
+                },
+                {
+                  "reps": "15",
+                  "weight": ""
+                },
+                {
+                  "reps": "15",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        },
+        "Sat": {
+          "date": "2026-08-08",
+          "session": "Aux",
+          "exercises": [
+            {
+              "name": "Machine chest press (incline, diff. than Mon)",
+              "prescription": "3 × 8–12 — 150 lb, RIR 0–1",
+              "sets": [
+                {
+                  "reps": "8-12",
+                  "weight": "150 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "150 lb"
+                },
+                {
+                  "reps": "8-12",
+                  "weight": "150 lb"
+                }
+              ]
+            },
+            {
+              "name": "Leg curl",
+              "prescription": "5 × 10–15 — 80 lb (wk3 ran 70 for 15s — different machine than Tue)",
+              "sets": [
+                {
+                  "reps": "10-15",
+                  "weight": "80 lb"
+                },
+                {
+                  "reps": "10-15",
+                  "weight": "80 lb"
+                },
+                {
+                  "reps": "10-15",
+                  "weight": "80 lb"
+                },
+                {
+                  "reps": "10-15",
+                  "weight": "80 lb"
+                },
+                {
+                  "reps": "10-15",
+                  "weight": "80 lb"
+                }
+              ]
+            },
+            {
+              "name": "Chest-supported or cable row",
+              "prescription": "4 × 10–12 — 90 lb (12×80 ×4 = top of range)",
+              "sets": [
+                {
+                  "reps": "10-12",
+                  "weight": "90 lb"
+                },
+                {
+                  "reps": "10-12",
+                  "weight": "90 lb"
+                },
+                {
+                  "reps": "10-12",
+                  "weight": "90 lb"
+                },
+                {
+                  "reps": "10-12",
+                  "weight": "90 lb"
+                }
+              ]
+            },
+            {
+              "name": "Rear-delt flye",
+              "prescription": "3 × 15 — 17.5 lb/DB",
+              "sets": [
+                {
+                  "reps": "15",
+                  "weight": "17.5 lb"
+                },
+                {
+                  "reps": "15",
+                  "weight": "17.5 lb"
+                },
+                {
+                  "reps": "15",
+                  "weight": "17.5 lb"
+                }
+              ]
+            },
+            {
+              "name": "Captain's chair leg raises",
+              "prescription": "3 × 15",
+              "sets": [
+                {
+                  "reps": "15",
+                  "weight": ""
+                },
+                {
+                  "reps": "15",
+                  "weight": ""
+                },
+                {
+                  "reps": "15",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "Lateral raise (optional)",
+              "prescription": "3 × 12–15 — 20 lb/DB, skip freely",
+              "sets": [
+                {
+                  "reps": "12-15",
+                  "weight": "20 lb"
+                },
+                {
+                  "reps": "12-15",
+                  "weight": "20 lb"
+                },
+                {
+                  "reps": "12-15",
+                  "weight": "20 lb"
                 }
               ]
             }

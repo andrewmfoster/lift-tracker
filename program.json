@@ -2988,6 +2988,419 @@
           ]
         }
       }
+    },
+    "5": {
+      "start": "2026-08-10",
+      "days": {
+        "Mon": {
+          "date": "2026-08-10",
+          "session": "A (deload, ~45 min)",
+          "exercises": [
+            {
+              "name": "Snatch — warmup complex (1 pwr + 1 full)",
+              "prescription": "3×2 — ramp 95–125 lb (95 / 115 / 125)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "95-125 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "95-125 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "95-125 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch — technique doubles",
+              "prescription": "3×2 — 135–145 lb, crisp and fast, nothing above 145",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "135-145 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-145 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-145 lb"
+                }
+              ]
+            },
+            {
+              "name": "Unilateral machine chest press",
+              "prescription": "2 × 8–10 — 110 lb, RIR 4",
+              "sets": [
+                {
+                  "reps": "8-10",
+                  "weight": "110 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "110 lb"
+                }
+              ]
+            },
+            {
+              "name": "Hanging knee raise",
+              "prescription": "2 × 10",
+              "sets": [
+                {
+                  "reps": "10",
+                  "weight": ""
+                },
+                {
+                  "reps": "10",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        },
+        "Tue": {
+          "date": "2026-08-11",
+          "session": "B (deload, ~45 min)",
+          "exercises": [
+            {
+              "name": "Rack jerk — warmup doubles",
+              "prescription": "3×2 — ramp 135–175 lb (135 / 155 / 175)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "135-175 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-175 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-175 lb"
+                }
+              ]
+            },
+            {
+              "name": "Rack jerk — technique doubles",
+              "prescription": "3×2 — 190–200 lb, crisp, no press-outs",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "190-200 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "190-200 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "190-200 lb"
+                }
+              ]
+            },
+            {
+              "name": "Hang clean (tech)",
+              "prescription": "3×2 — 155–165 lb, speed only",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "155-165 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "155-165 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "155-165 lb"
+                }
+              ]
+            },
+            {
+              "name": "DB lateral raise (seated)",
+              "prescription": "2 × 12 — 17.5 lb/DB, RIR 4",
+              "sets": [
+                {
+                  "reps": "12",
+                  "weight": "17.5 lb"
+                },
+                {
+                  "reps": "12",
+                  "weight": "17.5 lb"
+                }
+              ]
+            },
+            {
+              "name": "Leg curl",
+              "prescription": "2 × 10–12 — 80 lb, RIR 4",
+              "sets": [
+                {
+                  "reps": "10-12",
+                  "weight": "80 lb"
+                },
+                {
+                  "reps": "10-12",
+                  "weight": "80 lb"
+                }
+              ]
+            }
+          ]
+        },
+        "Thu": {
+          "date": "2026-08-13",
+          "session": "C (deload, ~45 min)",
+          "exercises": [
+            {
+              "name": "Snatch — warmup complex (1 pwr + 1 full)",
+              "prescription": "3×2 — ramp 95–125 lb (95 / 115 / 125)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "95-125 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "95-125 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "95-125 lb"
+                }
+              ]
+            },
+            {
+              "name": "Snatch — technique doubles",
+              "prescription": "2×2 — 135 lb",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "135 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135 lb"
+                }
+              ]
+            },
+            {
+              "name": "Back squat — warmup ramp",
+              "prescription": "2×5 — ramp 135–175 lb (135 / 175)",
+              "sets": [
+                {
+                  "reps": "5",
+                  "weight": "135-175 lb"
+                },
+                {
+                  "reps": "5",
+                  "weight": "135-175 lb"
+                }
+              ]
+            },
+            {
+              "name": "Back squat",
+              "prescription": "2×5 — 205 lb — no pause single, no grinding",
+              "sets": [
+                {
+                  "reps": "5",
+                  "weight": "205 lb"
+                },
+                {
+                  "reps": "5",
+                  "weight": "205 lb"
+                }
+              ]
+            },
+            {
+              "name": "Cable flye",
+              "prescription": "2 × 12 — 15 lb/side, RIR 4",
+              "sets": [
+                {
+                  "reps": "12",
+                  "weight": "15 lb"
+                },
+                {
+                  "reps": "12",
+                  "weight": "15 lb"
+                }
+              ]
+            },
+            {
+              "name": "Cable crunch or ab wheel",
+              "prescription": "2 × 12 — 50 lb, easy",
+              "sets": [
+                {
+                  "reps": "12",
+                  "weight": "50 lb"
+                },
+                {
+                  "reps": "12",
+                  "weight": "50 lb"
+                }
+              ]
+            }
+          ]
+        },
+        "Fri": {
+          "date": "2026-08-14",
+          "session": "D (deload, ~45 min)",
+          "exercises": [
+            {
+              "name": "C&J — warmup complex (pwr cln + jerk → full)",
+              "prescription": "3×2 — ramp 135–165 lb (135 / 155 / 165)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "135-165 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-165 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135-165 lb"
+                }
+              ]
+            },
+            {
+              "name": "C&J — technique doubles",
+              "prescription": "3×2 — 180–190 lb, crisp — do NOT chase back the wk4 miss here",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "180-190 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "180-190 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "180-190 lb"
+                }
+              ]
+            },
+            {
+              "name": "Front squat — warmup ramp",
+              "prescription": "1×5 — 135 lb",
+              "sets": [
+                {
+                  "reps": "5",
+                  "weight": "135 lb"
+                }
+              ]
+            },
+            {
+              "name": "Front squat",
+              "prescription": "2×5 — 170 lb",
+              "sets": [
+                {
+                  "reps": "5",
+                  "weight": "170 lb"
+                },
+                {
+                  "reps": "5",
+                  "weight": "170 lb"
+                }
+              ]
+            },
+            {
+              "name": "Plate-loaded pulldown",
+              "prescription": "2 × 8–10 — 120 lb, RIR 4",
+              "sets": [
+                {
+                  "reps": "8-10",
+                  "weight": "120 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "120 lb"
+                }
+              ]
+            },
+            {
+              "name": "Hanging leg raise",
+              "prescription": "2 × 12",
+              "sets": [
+                {
+                  "reps": "12",
+                  "weight": ""
+                },
+                {
+                  "reps": "12",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        },
+        "Sat": {
+          "date": "2026-08-15",
+          "session": "Aux (optional; skip freely, ~30 min)",
+          "exercises": [
+            {
+              "name": "Machine chest press (incline, diff. than Mon)",
+              "prescription": "2 × 8–10 — 150 lb, RIR 4",
+              "sets": [
+                {
+                  "reps": "8-10",
+                  "weight": "150 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "150 lb"
+                }
+              ]
+            },
+            {
+              "name": "Chest-supported or cable row",
+              "prescription": "2 × 10 — 90 lb, RIR 4",
+              "sets": [
+                {
+                  "reps": "10",
+                  "weight": "90 lb"
+                },
+                {
+                  "reps": "10",
+                  "weight": "90 lb"
+                }
+              ]
+            },
+            {
+              "name": "Rear-delt flye",
+              "prescription": "2 × 15 — 17.5 lb/DB",
+              "sets": [
+                {
+                  "reps": "15",
+                  "weight": "17.5 lb"
+                },
+                {
+                  "reps": "15",
+                  "weight": "17.5 lb"
+                }
+              ]
+            },
+            {
+              "name": "Captain's chair leg raises",
+              "prescription": "2 × 15",
+              "sets": [
+                {
+                  "reps": "15",
+                  "weight": ""
+                },
+                {
+                  "reps": "15",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        }
+      }
     }
   }
 }

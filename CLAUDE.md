@@ -28,3 +28,32 @@ Public GitHub Pages repo (`andrewmfoster.github.io/lift-tracker/`). Push to `mai
   Supabase held `done=false`. Fixed b7192ec: snapshot the exact entry per key and
   ref-compare (`queue[key] === entry`) before deleting. Any future queue rework must keep
   version/identity-checked deletes.
+
+- **The log records two things it cannot distinguish, and both produce plausible wrong
+  numbers downstream** (found 07-26 building the LIFTOS viz; fix belongs HERE, at the source,
+  not in the charts).
+  - **`done` is an untracked checkbox, not a skip record.** 15 sets in `~/.config/lift/sets.jsonl`
+    carry full actual reps+weight with `done:false` — including a 1×255 rack jerk and a 1×190
+    snatch. They were performed; the box was never ticked. Any consumer reading `done` as truth
+    undercounts: week-1 tonnage came out 18% low and a "+31% volume" story was really +13%.
+  - **No per-side flag.** Hip thrust logged 270 total on 07-18 and 135/side on 07-25 — same load,
+    two conventions, and the only signal is a free-text note.
+  - AndrewOS compensates for both (`_performed()` = done-or-has-actuals, `_side_factor()` parses
+    `/per side|each side/` off the note) but that is **a parser guessing at prose**.
+  - Real fix, unbuilt: a **tri-state per set** (done / skipped / untouched, so a genuine skip is
+    a row) plus a **per-side boolean** on weight entry.
+  - Third gap this exposed: a **dropped** exercise leaves no row at all, so it is invisible in
+    set data — adherence must be measured against `program.json` slots, not logged rows. And a
+    **moved** exercise (cable flye 07-18 → done 07-17) is indistinguishable from a dropped one.
+
+- **Row ids are namespaced on the meso — never write a bare `w{n}-…` id again.** Week numbers
+  restart every mesocycle, so the old `w1-Mon-e0-s0` scheme made Meso 2 week 1 regenerate Meso 1
+  week 1's ids byte-for-byte. `flush()` posts with `on_conflict=id,resolution=merge-duplicates`
+  against a `text primary key`, so the new meso's first tick **upserts over last meso's row** —
+  no error, sync still reads "synced". The same collision fed stale drafts back into the UI
+  (`draft` is keyed by the row id), which is how it surfaced on 08-16: Meso 2's week 1 rendered
+  July's ticks and loads. Fixed by `setKey()`/`noteKey()` prefixing `PROGRAM.meso_id` (`m2-…`),
+  emitted by `gen_program.py`'s `MESO_ID`, which is guarded to fail loud if it drifts from `MESO`.
+  Rows also carry a `meso` column now. Caught before any Meso 2 write, so no history was lost.
+  **Anything that groups by `week` alone has the same bug** — `pull_lifts.py:131` (`by_week`) and
+  the AndrewOS readers still do, and must key on `(meso, week)`.

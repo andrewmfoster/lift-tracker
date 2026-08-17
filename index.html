@@ -193,14 +193,28 @@ function syncStatus() {
   else { el.textContent = "synced"; el.className = "ok"; }
 }
 
+/* ---------------- row ids ----------------
+   Every id is namespaced on the meso. Week numbers restart each meso, so a bare
+   `w1-Mon-e0-s0` from Meso 2 is byte-identical to Meso 1's — and flush() upserts
+   with on_conflict=id, so the new meso's first tick OVERWRITES last meso's row.
+   Silent: no error, sync still reads "synced". Never drop the prefix. */
+function mesoKey() {
+  return PROGRAM.meso_id
+    || (PROGRAM.meso || "meso").toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+const setKey = (week, day, ei, si) => `${mesoKey()}-w${week}-${day}-e${ei}-s${si}`;
+const noteKey = (week, day, ei) =>
+  ei === undefined ? `${mesoKey()}-note-w${week}-${day}`
+                   : `${mesoKey()}-note-w${week}-${day}-e${ei}`;
+
 /* ---------------- row builders ---------------- */
 function setRow(week, day, ei, si) {
   const d = PROGRAM.weeks[week].days[day];
   const ex = d.exercises[ei];
-  const id = `w${week}-${day}-e${ei}-s${si}`;
+  const id = setKey(week, day, ei, si);
   const st = draft[id] || {};
   return {
-    id, session_date: d.date, week: +week, day,
+    id, meso: PROGRAM.meso, session_date: d.date, week: +week, day,
     exercise: ex.name, ex_index: ei, set_index: si,
     planned_reps: ex.sets[si].reps, planned_weight: ex.sets[si].weight,
     actual_reps: st.reps ?? ex.sets[si].reps,
@@ -210,10 +224,10 @@ function setRow(week, day, ei, si) {
 }
 function noteRow(week, day, scope, ei) {
   const d = PROGRAM.weeks[week].days[day];
-  const id = scope === "session" ? `note-w${week}-${day}` : `note-w${week}-${day}-e${ei}`;
+  const id = scope === "session" ? noteKey(week, day) : noteKey(week, day, ei);
   const st = draft[id] || {};
   return {
-    id, session_date: d.date, scope,
+    id, meso: PROGRAM.meso, session_date: d.date, scope,
     exercise: scope === "exercise" ? d.exercises[ei].name : null,
     body: st.body || "", ts: new Date().toISOString(),
   };
@@ -258,7 +272,7 @@ function render() {
 
   app.append(
     h("header", null,
-      h("h1", null, `WEEK ${state.week} · ${wk.days[state.day] ? wk.days[state.day].session : "REST"}`),
+      h("h1", null, `${(PROGRAM.meso || "").toUpperCase()} · WEEK ${state.week} · ${wk.days[state.day] ? wk.days[state.day].session : "REST"}`),
       h("span", { id: "sync" })),
     h("div", { id: "weekbar" },
       h("select", {
@@ -281,7 +295,7 @@ function render() {
   if (!day) { main.append(h("div", { class: "rest" }, "Rest day.")); syncStatus(); return; }
 
   day.exercises.forEach((ex, ei) => {
-    const noteId = `note-w${state.week}-${state.day}-e${ei}`;
+    const noteId = noteKey(state.week, state.day, ei);
     const noteSt = draft[noteId] || {};
     const ta = h("textarea", {
       class: noteSt.body ? "" : "hide", placeholder: "note…",
@@ -291,7 +305,7 @@ function render() {
       h("h2", null, ex.name),
       h("div", { class: "rx" }, ex.prescription),
       ex.sets.map((s, si) => {
-        const id = `w${state.week}-${state.day}-e${ei}-s${si}`;
+        const id = setKey(state.week, state.day, ei, si);
         const st = draft[id] || {};
         const row = h("div", { class: "set" + (st.done ? " done" : "") },
           h("button", { class: "tick", onclick: () => {
@@ -310,7 +324,7 @@ function render() {
       ta));
   });
 
-  const snId = `note-w${state.week}-${state.day}`;
+  const snId = noteKey(state.week, state.day);
   main.append(h("div", { id: "sessionnote" },
     h("h2", null, "SESSION NOTES — feedback for the program"),
     h("textarea", {
@@ -333,9 +347,26 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "flush-race-fix";
+const BUILD = "meso-scoped-ids";
+
+/* One-time: retire pre-meso-prefix draft keys ("w1-Mon-e0-s0", "note-w1-Mon").
+   They belong to Meso 1 and would otherwise render as this meso's ticks/loads
+   forever. Supabase holds the real rows; stash rather than drop, just in case. */
+function pruneLegacyDrafts() {
+  if (localStorage.getItem("lift.draft.pruned")) return;
+  const legacy = /^(note-)?w\d+-/;
+  const old = {};
+  for (const k of Object.keys(draft)) if (legacy.test(k)) { old[k] = draft[k]; delete draft[k]; }
+  if (Object.keys(old).length) {
+    localStorage.setItem("lift.draft.premeso", JSON.stringify(old));
+    localStorage.setItem(LS.draft, JSON.stringify(draft));
+  }
+  localStorage.setItem("lift.draft.pruned", "1");
+}
+
 fetch("program.json").then((r) => r.json()).then((p) => {
   PROGRAM = p;
+  pruneLegacyDrafts();
   const def = pickDefault();
   state.week = localStorage.getItem(LS.week) || def.week;
   if (!PROGRAM.weeks[state.week]) state.week = def.week;

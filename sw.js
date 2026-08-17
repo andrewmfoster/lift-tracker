@@ -1,6 +1,6 @@
 // program.json is network-first (fresh program on every online open, cache only
 // as offline fallback); other same-origin assets stay stale-while-revalidate.
-const CACHE = "lift-v3";
+const CACHE = "lift-v4";
 const ASSETS = ["./", "index.html", "program.json", "manifest.json", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", (e) => {

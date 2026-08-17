@@ -55,5 +55,8 @@ Public GitHub Pages repo (`andrewmfoster.github.io/lift-tracker/`). Push to `mai
   July's ticks and loads. Fixed by `setKey()`/`noteKey()` prefixing `PROGRAM.meso_id` (`m2-…`),
   emitted by `gen_program.py`'s `MESO_ID`, which is guarded to fail loud if it drifts from `MESO`.
   Rows also carry a `meso` column now. Caught before any Meso 2 write, so no history was lost.
-  **Anything that groups by `week` alone has the same bug** — `pull_lifts.py:131` (`by_week`) and
-  the AndrewOS readers still do, and must key on `(meso, week)`.
+  **Anything that groups by `week` alone has the same bug.** Consumers were fixed 08-16 too:
+  `pull_lifts.normalize()` stamps `meso` on every cached row and is the ONLY place that
+  derivation lives — AndrewOS `_liftos` and the liftos-mock read the field, never re-derive it.
+  `pull_lifts.py` also imports `MESO`/`PROGRAM_DOC` from `gen_program` rather than keeping its
+  own copy; the two had drifted, so it was writing Meso 2's set counts into the Meso 1 doc.

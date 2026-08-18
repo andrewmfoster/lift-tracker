@@ -14,6 +14,12 @@ Public GitHub Pages repo (`andrewmfoster.github.io/lift-tracker/`). Push to `mai
 
 ## Gotchas
 
+- **Ship order for a new column: run the migration first, then deploy the code that writes
+  it.** `PGRST204` (schema cache miss) is a 400, so the write sits at the head of the FIFO
+  queue and *everything behind it stops crossing too* — not just that one field. The UI keeps
+  showing values that never synced and reads as "syncing" all session. Never classify a
+  schema-cache 4xx as permanent; it is self-healing once the migration lands.
+
 - **Ship = bump the cache, or the phone keeps old code.** `index.html`/`sw.js` are
   stale-while-revalidate, so a code change alone can serve stale for a load or two. On any
   behavior change bump `sw.js` `CACHE` (e.g. `lift-v3`) AND the `BUILD` stamp in

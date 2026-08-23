@@ -47,6 +47,19 @@
     background: var(--card); color: var(--text); border: 1px solid var(--line);
     border-radius: 7px; padding: 4px 8px; font-size: 13px;
   }
+  /* Why this week's loads are what they are. Since the weekly close job writes and pushes
+     the program headless, this is the only place Andrew reads its reasoning before lifting
+     it — open by default on purpose. */
+  #weeknote {
+    margin: 0 12px 10px; padding: 9px 12px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    color: var(--dim); font-size: 12.5px; line-height: 1.5;
+  }
+  #weeknote summary {
+    cursor: pointer; color: var(--text); font-size: 12px;
+    letter-spacing: .06em; text-transform: uppercase;
+  }
+  #weeknote p { margin: 8px 0 0; }
   main { padding: 4px 12px; }
   .ex {
     background: var(--card); border: 1px solid var(--line);
@@ -280,6 +293,9 @@ function render() {
       }, Object.keys(PROGRAM.weeks).map((w) =>
         h("option", { value: w, ...(w === state.week ? { selected: "" } : {}) }, `Week ${w} — ${PROGRAM.weeks[w].start}`))),
       h("span", null, wk.days[state.day] ? wk.days[state.day].date : "")),
+    ...(wk.note ? [h("details", { id: "weeknote", open: "" },
+      h("summary", null, "Why these loads"),
+      h("p", null, wk.note))] : []),
     h("nav", null, DAYS.slice(1).concat("Sun").map((d) => {
       const has = !!wk.days[d];
       const todayName = DAYS[new Date().getDay()];

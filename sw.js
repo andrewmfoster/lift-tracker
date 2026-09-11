@@ -1,7 +1,8 @@
 // program.json is network-first (fresh program on every online open, cache only
 // as offline fallback); other same-origin assets stay stale-while-revalidate.
-const CACHE = "lift-v5";  // bumped: week-note render (code change, not program-only)
-const ASSETS = ["./", "index.html", "program.json", "manifest.json", "icon-192.png", "icon-512.png"];
+const CACHE = "lift-v7";  // bumped: bodyweight log + LiftOS restyle
+const ASSETS = ["./", "index.html", "program.json", "manifest.json", "icon-192.png", "icon-512.png", "apple-touch-icon.png",
+  "fonts/ChakraPetch-500.woff2", "fonts/ChakraPetch-600.woff2", "fonts/ChakraPetch-700.woff2", "fonts/Orbitron-800.woff2"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));

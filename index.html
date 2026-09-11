@@ -3,108 +3,205 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#080C18">
+<meta name="theme-color" content="#0B0B0C">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Lift</title>
+<title>LiftOS</title>
 <style>
+  /* Self-hosted: the app runs offline at the gym, so a Google Fonts link would fall back
+     silently with no signal. sw.js caches these files. */
+  @font-face { font-family: "Chakra Petch"; font-weight: 500; font-display: swap; src: url(fonts/ChakraPetch-500.woff2) format("woff2"); }
+  @font-face { font-family: "Chakra Petch"; font-weight: 600; font-display: swap; src: url(fonts/ChakraPetch-600.woff2) format("woff2"); }
+  @font-face { font-family: "Chakra Petch"; font-weight: 700; font-display: swap; src: url(fonts/ChakraPetch-700.woff2) format("woff2"); }
+  @font-face { font-family: "Orbitron"; font-weight: 800; font-display: swap; src: url(fonts/Orbitron-800.woff2) format("woff2"); }
   :root {
-    --bg: #080C18; --card: #101627; --line: #1d2740;
-    --text: #e8ecf4; --dim: #7a8699; --accent: #5C8CB0;
-    --done: #4caf7d; --warn: #d9a441;
+    --bg: #0B0B0C; --card: #141415; --field: #0F0F10; --line: #2A2A2D; --line2: #3A3A3E;
+    --text: #F2EEE8; --dim: #8B8A88; --faint: #5E5D5B;
+    --coral: #F2655A; --coral-ink: #1A0806; --coral-soft: rgba(242, 101, 90, .12);
+    --warn: #E3A64A;
+    --glow: 0 0 14px rgba(242, 101, 90, .45);
+    --ring: 0 0 0 5px var(--bg), 0 0 0 6px rgba(242, 101, 90, .55), 0 0 26px 4px rgba(242, 101, 90, .14);
+    --ui: "Chakra Petch", -apple-system, system-ui, sans-serif;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body {
     margin: 0; background: var(--bg); color: var(--text);
-    font: 16px/1.45 -apple-system, system-ui, sans-serif;
-    padding: env(safe-area-inset-top) 0 40px;
+    font: 500 16px/1.4 var(--ui);
+    padding: env(safe-area-inset-top) 0 calc(96px + env(safe-area-inset-bottom));
   }
-  header {
-    display: flex; align-items: baseline; gap: 10px;
-    padding: 14px 16px 6px;
+  button, input, select, textarea { font-family: inherit; }
+  button { cursor: pointer; }
+
+  /* header */
+  header { display: flex; align-items: center; gap: 10px; padding: 16px 18px 6px; }
+  .wordmark {
+    margin: 0; font: 800 26px/1 "Orbitron", var(--ui); letter-spacing: .14em;
+    color: var(--coral); text-shadow: var(--glow);
   }
-  header h1 { font-size: 17px; margin: 0; letter-spacing: .06em; }
   #sync {
-    margin-left: auto; font-size: 12px; color: var(--dim);
+    margin-left: auto; display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(242, 101, 90, .45);
+    font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--dim);
   }
-  #sync.pending { color: var(--warn); }
-  #sync.ok { color: var(--done); }
-  nav { display: flex; gap: 6px; padding: 6px 16px 10px; overflow-x: auto; }
-  nav button {
-    flex: 1; min-width: 44px; padding: 9px 0; border-radius: 9px;
-    border: 1px solid var(--line); background: var(--card); color: var(--dim);
-    font-size: 13px; font-weight: 600;
-  }
-  nav button.today { border-color: var(--accent); }
-  nav button.active { background: var(--accent); color: #06101c; border-color: var(--accent); }
-  #weekbar {
-    display: flex; align-items: center; gap: 12px; padding: 0 16px 4px;
-    color: var(--dim); font-size: 13px;
-  }
+  #sync::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--faint); }
+  #sync.ok::before { background: var(--coral); box-shadow: var(--glow); }
+  #sync.pending { color: var(--warn); border-color: rgba(227, 166, 74, .5); }
+  #sync.pending::before { background: var(--warn); }
+
+  /* meso / week / session line */
+  #weekbar { display: flex; align-items: center; gap: 12px; padding: 8px 18px 12px; color: var(--dim); }
+  #weekbar .meso { color: var(--text); font-size: 24px; font-weight: 600; }
+  #weekbar .sep { width: 1px; height: 22px; background: var(--line2); }
   #weekbar select {
-    background: var(--card); color: var(--text); border: 1px solid var(--line);
-    border-radius: 7px; padding: 4px 8px; font-size: 13px;
+    appearance: none; -webkit-appearance: none; background: none; border: 0; padding: 2px 16px 2px 0;
+    color: var(--dim); font-size: 18px; font-weight: 500;
+    background-image: linear-gradient(45deg, transparent 50%, var(--dim) 50%), linear-gradient(135deg, var(--dim) 50%, transparent 50%);
+    background-position: right 5px center, right 0 center; background-size: 5px 5px; background-repeat: no-repeat;
   }
-  /* Why this week's loads are what they are. Since the weekly close job writes and pushes
-     the program headless, this is the only place Andrew reads its reasoning before lifting
-     it — open by default on purpose. */
-  #weeknote {
-    margin: 0 12px 10px; padding: 9px 12px;
-    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
-    color: var(--dim); font-size: 12.5px; line-height: 1.5;
+  #weekbar .rule { flex: 1; height: 1px; background: var(--line2); }
+  #weekbar .session { font-size: 15px; letter-spacing: .06em; }
+
+
+  /* day picker */
+  #days { display: flex; gap: 8px; padding: 0 14px 14px; overflow-x: auto; }
+  #days button {
+    flex: 1; min-width: 56px; padding: 12px 0; border-radius: 12px;
+    border: 1px solid var(--line2); background: var(--field); color: var(--dim);
+    font-size: 15px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
   }
-  #weeknote summary {
-    cursor: pointer; color: var(--text); font-size: 12px;
-    letter-spacing: .06em; text-transform: uppercase;
+  #days button.today { color: var(--text); }
+  #days button.rest { color: var(--faint); border-style: dashed; }
+  #days button.active {
+    color: var(--coral); border: 1.5px solid var(--coral); background: var(--coral-soft); box-shadow: var(--glow);
   }
-  #weeknote p { margin: 8px 0 0; }
-  main { padding: 4px 12px; }
-  .ex {
-    background: var(--card); border: 1px solid var(--line);
-    border-radius: 12px; margin-bottom: 10px; padding: 12px 12px 8px;
+
+  main { padding: 0 14px; }
+
+  /* exercise card */
+  .ex { background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin-bottom: 12px; padding: 14px 14px 10px; }
+  .ex-head { display: flex; align-items: flex-start; }
+  .ex-num {
+    flex: none; width: 44px; padding-right: 12px; margin-right: 12px; border-right: 1px solid var(--line2);
+    color: var(--coral); font-size: 20px; font-weight: 700; line-height: 1.3; text-shadow: 0 0 10px rgba(242, 101, 90, .35);
   }
-  .ex h2 { margin: 0; font-size: 15px; }
-  .ex .rx { color: var(--dim); font-size: 12.5px; margin: 3px 0 8px; }
-  .set {
-    display: flex; align-items: center; gap: 10px; padding: 5px 0;
-  }
+  .ex-title { flex: 1; min-width: 0; }
+  .ex h2 { margin: 0; font-size: 18px; font-weight: 600; line-height: 1.25; }
+  .ex .rx { color: var(--dim); font-size: 14px; margin: 3px 0 8px; }
+  .more { flex: none; background: none; border: 0; color: var(--dim); font-size: 14px; line-height: 1; padding: 0 2px 8px 10px; white-space: nowrap; }
+  .more.on { color: var(--coral); }
+  .sets { margin-top: 4px; }
+  .set { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
   .tick {
-    width: 44px; height: 44px; border-radius: 10px; flex: none;
-    border: 1.5px solid var(--line); background: transparent;
-    color: transparent; font-size: 20px;
+    width: 38px; height: 38px; border-radius: 8px; flex: none; padding: 0;
+    border: 2px solid var(--coral); background: transparent; box-shadow: 0 0 8px rgba(242, 101, 90, .25);
+    color: transparent; font-size: 20px; font-weight: 700;
   }
-  .set.done .tick { background: var(--done); border-color: var(--done); color: #06101c; }
-  .set input {
-    width: 0; min-width: 0; flex: 1; padding: 10px 8px; border-radius: 8px;
-    border: 1px solid var(--line); background: #0b1120; color: var(--text);
-    font-size: 16px; text-align: center;
+  .set.done .tick { background: var(--coral); color: var(--coral-ink); box-shadow: var(--glow); }
+  .set .lbl { flex: none; width: 40px; color: var(--dim); font-size: 14px; }
+  .set.done .lbl { color: var(--coral); }
+  .field {
+    flex: 1; min-width: 0; display: flex; align-items: center;
+    border: 1px solid var(--line2); border-radius: 9px; background: var(--field); padding: 0 8px;
   }
-  .set input::placeholder { color: #4a5568; }
-  .set .x { color: var(--dim); flex: none; font-size: 13px; }
-  .notebtn {
-    background: none; border: none; color: var(--dim); font-size: 13px;
-    padding: 6px 0 4px; text-align: left;
+  /* planned loads are ranges ("135-205"), reps are 1-2 digits: weight gets the width */
+  .field.wt { flex: 1.35; }
+  .field input {
+    width: 0; min-width: 0; flex: 1; padding: 10px 0; border: 0; background: none;
+    color: var(--text); font-size: 17px; font-weight: 600; outline: none;
   }
+  .field input::placeholder { color: var(--faint); font-weight: 500; }
+  .field span { flex: none; color: var(--faint); font-size: 13px; padding-left: 4px; }
+  .field:focus-within { border-color: var(--coral); }
   .ex textarea, #sessionnote textarea {
-    width: 100%; min-height: 64px; margin-top: 4px;
-    background: #0b1120; color: var(--text); border: 1px solid var(--line);
-    border-radius: 8px; padding: 8px; font: 15px/1.4 inherit;
+    width: 100%; min-height: 64px; margin-top: 8px;
+    background: var(--field); color: var(--text); border: 1px solid var(--line2);
+    border-radius: 10px; padding: 10px; font: 16px/1.4 -apple-system, system-ui, sans-serif; outline: none;
   }
+  .ex textarea:focus, #sessionnote textarea:focus { border-color: var(--coral); }
   .ex textarea.hide { display: none; }
-  #sessionnote { margin: 18px 0 10px; }
-  #sessionnote h2 { font-size: 14px; color: var(--dim); margin: 0 0 2px; letter-spacing: .05em; }
-  .rest { text-align: center; color: var(--dim); padding: 60px 0; font-size: 15px; }
+  #sessionnote { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; margin: 4px 0 12px; }
+  #sessionnote h2 { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; margin: 0; }
+  #sessionnote h2 small { color: var(--dim); font-size: 13px; font-weight: 500; }
+  .rest { text-align: center; color: var(--dim); padding: 60px 0; font-size: 16px; letter-spacing: .08em; text-transform: uppercase; }
+
+  /* bottom tab bar */
+  #tabbar {
+    position: fixed; left: 14px; right: 14px; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 5;
+    display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--ring);
+  }
+  #tabbar button {
+    flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 12px 0 10px; background: none; border: 0; color: var(--dim); font-size: 15px; font-weight: 600;
+  }
+  #tabbar button + button { border-left: 1px solid var(--line); }
+  #tabbar svg { width: 30px; height: 30px; fill: currentColor; }
+  #tabbar button.active { color: var(--coral); text-shadow: var(--glow); }
+  #tabbar button.active svg { filter: drop-shadow(0 0 6px rgba(242, 101, 90, .6)); }
+  #tabbar button.active::before {
+    content: ""; position: absolute; top: -1px; left: 32%; right: 32%; height: 3px; border-radius: 0 0 3px 3px;
+    background: var(--coral); box-shadow: var(--glow);
+  }
+
+  /* weight screen */
+  .wcard { background: var(--card); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--ring); padding: 20px 18px; margin: 10px 6px 26px; }
+  .eyebrow { color: var(--dim); font-size: 14px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; margin: 0; }
+  .big { margin: 4px 0 0; font-size: 72px; font-weight: 700; line-height: 1; letter-spacing: -.02em; }
+  .big small { font-size: 36px; color: var(--dim); margin-left: 8px; letter-spacing: 0; }
+  .big.need { font-size: 24px; line-height: 1.3; color: var(--dim); font-weight: 600; margin-top: 10px; }
+  .delta { color: var(--coral); font-size: 22px; font-weight: 600; margin: 6px 0 0; }
+  .weight-chart { width: 100%; height: auto; display: block; margin-top: 16px; }
+  .weight-chart text { font: 500 11px var(--ui); fill: var(--dim); }
+  .range { display: flex; gap: 8px; margin-top: 10px; }
+  .range button {
+    flex: 1; padding: 8px 0; border-radius: 10px; border: 1px solid var(--line2); background: var(--field);
+    color: var(--dim); font-size: 14px; font-weight: 600;
+  }
+  .range button.active { color: var(--coral); border-color: var(--coral); background: var(--coral-soft); }
+  .wcard h2 { margin: 0 0 14px; font-size: 26px; font-weight: 700; }
+  .wfield { display: flex; align-items: center; border: 1px solid var(--line2); border-radius: 14px; background: var(--field); }
+  .wfield input {
+    flex: 1; min-width: 0; border: 0; background: none; outline: none; padding: 12px 18px;
+    color: var(--text); font-size: 56px; font-weight: 700; letter-spacing: -.01em;
+  }
+  .wfield input::placeholder { color: var(--faint); }
+  .wfield span { flex: none; align-self: stretch; display: flex; align-items: center; padding: 0 20px; border-left: 1px solid var(--line2); color: var(--dim); font-size: 30px; font-weight: 700; }
+  .wfield:focus-within { border-color: var(--coral); }
+  .weight-time {
+    display: block; width: 100%; margin: 12px 0 16px; padding: 4px 0; border: 0; background: none;
+    color: var(--dim); font-size: 18px; font-weight: 500; outline: none; color-scheme: dark;
+  }
+  .chips { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .chip {
+    padding: 13px 8px; border-radius: 14px; border: 1px solid var(--line2); background: var(--field);
+    color: var(--dim); font-size: 17px; font-weight: 600;
+  }
+  .chip.active { background: var(--coral); border-color: var(--coral); color: var(--coral-ink); box-shadow: var(--glow); }
+  .save-weight {
+    width: 100%; margin-top: 6px; padding: 16px; border: 0; border-radius: 14px;
+    background: var(--coral); color: var(--coral-ink); font-size: 22px; font-weight: 700; box-shadow: var(--glow);
+  }
+  .save-weight:active, .chip:active, .tick:active { transform: scale(.98); }
+  .wcard.editing h2::after { content: " · editing"; color: var(--coral); font-size: 16px; font-weight: 600; }
+  .recent { margin: 0 6px 20px; padding: 0 4px; }
+  .recent h3 { margin: 0 0 6px; color: var(--dim); font-size: 13px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
+  .weight-entry { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-top: 1px solid var(--line); }
+  .weight-entry strong { flex: none; min-width: 64px; font-size: 18px; font-weight: 700; }
+  .weight-entry span { flex: 1; color: var(--dim); font-size: 14px; }
+  .weight-entry button { flex: none; padding: 6px 10px; border: 1px solid var(--line2); border-radius: 8px; background: var(--field); color: var(--dim); font-size: 13px; font-weight: 600; }
+  .weight-sub { color: var(--dim); font-size: 14px; margin: 6px 0 0; }
+
   /* login */
-  #login { padding: 60px 24px; max-width: 360px; margin: 0 auto; }
+  #login { padding: 90px 24px; max-width: 360px; margin: 0 auto; }
+  #login .wordmark { font-size: 34px; margin-bottom: 30px; text-align: center; }
   #login input {
-    width: 100%; margin-bottom: 10px; padding: 12px; border-radius: 9px;
-    border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 16px;
+    width: 100%; margin-bottom: 10px; padding: 13px; border-radius: 12px;
+    border: 1px solid var(--line2); background: var(--field); color: var(--text); font-size: 16px;
   }
   #login button {
-    width: 100%; padding: 13px; border-radius: 9px; border: none;
-    background: var(--accent); color: #06101c; font-size: 16px; font-weight: 700;
+    width: 100%; padding: 14px; border-radius: 12px; border: none;
+    background: var(--coral); color: var(--coral-ink); font-size: 17px; font-weight: 700; box-shadow: var(--glow);
   }
   #loginerr { color: var(--warn); font-size: 13px; min-height: 20px; }
 </style>
@@ -120,7 +217,8 @@ const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const LS = {
   queue: "lift.queue", session: "lift.auth", week: "lift.week",
-  draft: "lift.draft" // local mirror of row state so reopening shows ticks
+  draft: "lift.draft", // local mirror of row state so reopening shows ticks
+  weights: "lift.weights"
 };
 
 let PROGRAM = null;
@@ -128,6 +226,53 @@ let state = { week: null, day: null };
 let draft = JSON.parse(localStorage.getItem(LS.draft) || "{}");
 let queue = JSON.parse(localStorage.getItem(LS.queue) || "{}");
 let auth = JSON.parse(localStorage.getItem(LS.session) || "null");
+let weights = JSON.parse(localStorage.getItem(LS.weights) || "[]");
+let weightForm = null;
+
+function localDate(d = new Date()) {
+  const offset = d.getTimezoneOffset() * 60000;
+  return new Date(d.getTime() - offset).toISOString().slice(0, 10);
+}
+function phoneZone() { return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; }
+function saveWeights() { localStorage.setItem(LS.weights, JSON.stringify(weights)); }
+function activeWeights() { return weights.filter((row) => !row.deleted); }
+function weightRow(form) {
+  const at = new Date(form.logged_at);
+  return {
+    id: form.id || `bw-${crypto.randomUUID()}`,
+    weight_lb: Number(form.weight_lb), logged_at: at.toISOString(), tz: phoneZone(),
+    local_date: localDate(at), fasted: form.fasted, training: form.training,
+    deleted: false, ts: new Date().toISOString(),
+  };
+}
+// datetime-local reads and writes LOCAL wall time. Feeding it toISOString() (UTC) shows a
+// time 5h off and, parsed back as local, stores the weigh-in 5h late on every save.
+function localStamp(d = new Date()) {
+  const p = (n) => String(n).padStart(2, "0");
+  return `${localDate(d)}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function newWeightForm() {
+  return { id: null, weight_lb: "", logged_at: localStamp(), fasted: null, training: null };
+}
+function mergeWeights(rows) {
+  const byId = new Map(weights.map((row) => [row.id, row]));
+  for (const row of rows) byId.set(row.id, { ...byId.get(row.id), ...row });
+  weights = [...byId.values()]; saveWeights();
+}
+async function pullWeights() {
+  if (!auth) return;
+  try {
+    const t = await token();
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/body_weights?deleted=eq.false&select=*`, {
+      headers: { apikey: SUPABASE_ANON, authorization: `Bearer ${t}` },
+    });
+    if (!r.ok) throw new Error(`body_weights: ${r.status}`);
+    // a row still queued is newer than the server's copy (an unsynced edit or delete);
+    // merging the server row over it would revert the edit or resurrect the delete.
+    mergeWeights((await r.json()).filter((row) => !queue[`body_weights:${row.id}`]));
+    if (state.tab === "weight") render();
+  } catch (_) { /* local mirror remains available offline */ }
+}
 
 /* ---------------- auth (Supabase GoTrue REST, no SDK) ---------------- */
 async function login(email, password) {
@@ -264,7 +409,7 @@ function h(tag, attrs, ...kids) {
 
 function pickDefault() {
   const weeks = Object.keys(PROGRAM.weeks);
-  const todayISO = new Date().toISOString().slice(0, 10);
+  const todayISO = localDate();
   let best = { week: weeks[weeks.length - 1], day: null };
   for (const w of weeks) for (const [d, v] of Object.entries(PROGRAM.weeks[w].days)) {
     if (v.date === todayISO) return { week: w, day: d };
@@ -273,78 +418,216 @@ function pickDefault() {
   return { week: best.week, day: best.day || Object.keys(PROGRAM.weeks[best.week].days)[0] };
 }
 
+function calendarWindow(days, end = localDate()) {
+  const d = new Date(`${end}T12:00:00`);
+  d.setDate(d.getDate() - days + 1);
+  return [localDate(d), end];
+}
+function averageIn(start, end) {
+  const rows = activeWeights().filter((row) => row.local_date >= start && row.local_date <= end);
+  return { rows, value: rows.length ? rows.reduce((sum, row) => sum + Number(row.weight_lb), 0) / rows.length : null };
+}
+const SVGNS = "http://www.w3.org/2000/svg";
+function svgEl(tag, attrs) {
+  const el = document.createElementNS(SVGNS, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  return el;
+}
+// Tab icons. The dumbbell is the app icon's own glyph, traced at 24px.
+const ICONS = {
+  train: "M3.5 5h2.2v1.3h2.4V9.6h7.8V6.3h2.4V5h2.2v4.6h1.5v2.8h-1.5V17h-2.2v1.3h-2.4v-4.9H8.1v4.9H5.7V17H3.5v-4.6H2V9.6h1.5z",
+  weight: "M6 3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3zm0 2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm6 1.5a5 5 0 0 1 4.6 3l-2 .9a2.8 2.8 0 0 0-1.8-1.6l-.6 2.6h-.4l-.6-2.6a2.8 2.8 0 0 0-1.8 1.6l-2-.9A5 5 0 0 1 12 6.5z",
+};
+function icon(name) {
+  const s = svgEl("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" });
+  s.append(svgEl("path", { d: ICONS[name] }));
+  return s;
+}
+const shortDate = (iso) => new Date(`${iso}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+function weightChart(shown) {
+  const W = 320, H = 170, L = 34, R = 8, T = 8, B = 22;
+  const svg = svgEl("svg", { class: "weight-chart", viewBox: `0 0 ${W} ${H}` });
+  if (!shown.length) {
+    const t = svgEl("text", { x: W / 2, y: H / 2, "text-anchor": "middle" }); t.textContent = "No weigh-ins in this range";
+    svg.append(t); return svg;
+  }
+  const vals = shown.map((row) => Number(row.weight_lb));
+  const lo = Math.floor(Math.min(...vals) - 1), hi = Math.ceil(Math.max(...vals) + 1), span = hi - lo || 1;
+  // x is time, not entry index: three weigh-ins in one day must not read as three days.
+  const t = shown.map((row) => Date.parse(row.logged_at)), t0 = t[0], tspan = t[t.length - 1] - t0;
+  const x = (ms) => tspan ? L + (ms - t0) * (W - L - R) / tspan : (L + W - R) / 2;
+  const y = (v) => T + (hi - v) * (H - T - B) / span;
+  for (let i = 0; i <= 4; i++) {
+    const v = lo + span * i / 4, yy = y(v);
+    svg.append(svgEl("line", { x1: L, x2: W - R, y1: yy, y2: yy, stroke: "#2A2A2D", "stroke-dasharray": i ? "3 4" : "", "stroke-width": 1 }));
+    const lab = svgEl("text", { x: L - 6, y: yy + 4, "text-anchor": "end" }); lab.textContent = Math.round(v);
+    svg.append(lab);
+  }
+  const ticks = tspan ? [0, .5, 1] : [.5];
+  ticks.forEach((f) => {
+    const ms = t0 + tspan * f, lab = svgEl("text", { x: x(ms), y: H - 5, "text-anchor": f === 0 ? "start" : f === 1 ? "end" : "middle" });
+    lab.textContent = shortDate(localDate(new Date(ms))); svg.append(lab);
+  });
+  const avg = shown.map((row, i) => {
+    const w = averageIn(calendarWindow(7, row.local_date)[0], row.local_date);
+    return w.rows.length ? `${x(t[i]).toFixed(1)},${y(w.value).toFixed(1)}` : null;
+  }).filter(Boolean).join(" ");
+  if (shown.length > 1) {
+    svg.append(svgEl("polyline", { points: avg, fill: "none", stroke: "#F2655A", "stroke-width": 7, opacity: .18, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+    svg.append(svgEl("polyline", { points: avg, fill: "none", stroke: "#F2655A", "stroke-width": 2.5, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+  }
+  shown.forEach((row, i) => svg.append(svgEl("circle", { cx: x(t[i]), cy: y(vals[i]), r: 3.2, fill: "#F2655A", opacity: .6 })));
+  return svg;
+}
+
+function renderWeight(main) {
+  weightForm ||= newWeightForm();
+  const f = weightForm;
+
+  const [thisStart, today] = calendarWindow(7);
+  const current = averageIn(thisStart, today);
+  const priorEndDate = new Date(`${thisStart}T12:00:00`); priorEndDate.setDate(priorEndDate.getDate() - 1);
+  const priorEnd = localDate(priorEndDate); const priorStartDate = new Date(`${priorEnd}T12:00:00`); priorStartDate.setDate(priorStartDate.getDate() - 6);
+  const prior = averageIn(localDate(priorStartDate), priorEnd);
+  const enough = current.rows.length >= 3;
+  const diff = enough && prior.rows.length ? current.value - prior.value : null;
+  const range = state.weightRange || 30;
+  const rows = activeWeights().sort((a, b) => Date.parse(a.logged_at) - Date.parse(b.logged_at));
+  const shown = range === "all" ? rows : rows.filter((row) => row.local_date >= calendarWindow(range)[0]);
+  main.append(h("section", { class: "wcard" },
+    h("p", { class: "eyebrow" }, "7-day average"),
+    enough ? h("p", { class: "big" }, current.value.toFixed(1), h("small", null, "lb"))
+           : h("p", { class: "big need" }, `Need 3 weigh-ins this week (${current.rows.length} so far)`),
+    diff === null ? null : h("p", { class: "delta" }, `${diff >= 0 ? "+" : ""}${diff.toFixed(1)} lb vs last week`),
+    weightChart(shown),
+    h("div", { class: "range" }, [30, 90, "all"].map((value) => h("button", {
+      class: value === range ? "active" : "", onclick: () => { state.weightRange = value; render(); },
+    }, value === "all" ? "All" : `${value}d`)))));
+
+  const input = h("input", { type: "number", min: "80", max: "400", step: ".1", inputmode: "decimal", placeholder: "000.0", value: f.weight_lb });
+  const logged = h("input", { class: "weight-time", type: "datetime-local", value: f.logged_at });
+  const chip = (label, value, key) => h("button", {
+    class: "chip" + (f[key] === value ? " active" : ""),
+    onclick: () => { f.weight_lb = input.value; f.logged_at = logged.value; f[key] = f[key] === value ? null : value; render(); },
+  }, label);
+  main.append(h("section", { class: "wcard" + (f.id ? " editing" : "") },
+    h("h2", null, "Log weight"),
+    h("div", { class: "wfield" }, input, h("span", null, "lb")),
+    logged,
+    h("div", { class: "chips" },
+      chip("Fasted", true, "fasted"), chip("Fed", false, "fasted"),
+      chip("Before training", "before", "training"), chip("After training", "after", "training")),
+    h("button", { class: "save-weight", onclick: () => {
+      f.weight_lb = input.value; f.logged_at = logged.value;
+      if (!Number.isFinite(Number(f.weight_lb)) || Number(f.weight_lb) < 80 || Number(f.weight_lb) > 400 || !f.logged_at) { input.focus(); return; }
+      const row = weightRow(f); mergeWeights([row]); enqueue("body_weights", row); weightForm = newWeightForm(); render();
+    } }, f.id ? "Save changes" : "Save"),
+    f.id ? h("button", { class: "range", style: "width:100%;background:none;border:0;color:var(--dim);font-size:15px;padding:10px 0 0",
+      onclick: () => { weightForm = newWeightForm(); render(); } }, "Cancel edit") : null));
+
+  const recent = activeWeights().sort((a, b) => b.logged_at.localeCompare(a.logged_at)).slice(0, 5);
+  const when = (row) => new Date(row.logged_at).toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  const tags = (row) => [row.fasted === true ? "fasted" : row.fasted === false ? "fed" : null, row.training ? `${row.training} training` : null].filter(Boolean).join(" · ");
+  main.append(h("section", { class: "recent" }, h("h3", null, "Recent"),
+    recent.length ? recent.map((row) => h("div", { class: "weight-entry" },
+      h("strong", null, Number(row.weight_lb).toFixed(1)),
+      h("span", null, when(row), tags(row) ? h("br") : null, tags(row)),
+      h("button", { onclick: () => { weightForm = { ...row, logged_at: localStamp(new Date(row.logged_at)) }; render(); window.scrollTo(0, 0); } }, "Edit"),
+      h("button", { onclick: () => {
+        if (!confirm(`Delete ${Number(row.weight_lb).toFixed(1)} lb from ${when(row)}?`)) return;
+        const deleted = { ...row, deleted: true, ts: new Date().toISOString() }; mergeWeights([deleted]); enqueue("body_weights", deleted); render();
+      } }, "Delete")))
+    : h("p", { class: "weight-sub" }, "No weigh-ins yet.")));
+}
+
+function tabbar(isWeight) {
+  const tab = (name, label, on) => h("button", { class: on ? "active" : "", onclick: () => { state.tab = name; render(); window.scrollTo(0, 0); } }, icon(name), label);
+  return h("nav", { id: "tabbar" }, tab("train", "Train", !isWeight), tab("weight", "Weight", isWeight));
+}
+
 function render() {
   const app = document.getElementById("app");
   app.replaceChildren();
   if (SUPABASE_URL.startsWith("__")) {
-    app.append(h("div", { class: "rest" }, "Supabase not configured — fill SUPABASE_URL / SUPABASE_ANON."));
+    app.append(h("div", { class: "rest" }, "Supabase not configured. Fill SUPABASE_URL / SUPABASE_ANON."));
     return;
   }
   if (!auth) return renderLogin(app);
   const wk = PROGRAM.weeks[state.week];
+  const isWeight = state.tab === "weight";
 
   app.append(
-    h("header", null,
-      h("h1", null, `${(PROGRAM.meso || "").toUpperCase()} · WEEK ${state.week} · ${wk.days[state.day] ? wk.days[state.day].session : "REST"}`),
-      h("span", { id: "sync" })),
+    h("header", null, h("h1", { class: "wordmark" }, "LIFTOS"), h("span", { id: "sync" })),
+    h("main", { id: "main" }),
+    tabbar(isWeight));
+  const main = document.getElementById("main");
+  if (isWeight) { renderWeight(main); syncStatus(); return; }
+
+  const day = wk.days[state.day];
+  // The program doc's session headings can carry editorial asides; the label wants the letter.
+  const session = day ? (String(day.session).match(/[A-Za-z]+/) || ["?"])[0] : "Rest";
+  const todayName = DAYS[new Date().getDay()];
+  const dayList = DAYS.slice(1).concat("Sun").filter((d) => wk.days[d] || d === todayName || d === state.day);
+  main.before(
     h("div", { id: "weekbar" },
+      h("span", { class: "meso" }, PROGRAM.meso || ""),
+      h("span", { class: "sep" }),
       h("select", {
         onchange: (e) => { state.week = e.target.value; localStorage.setItem(LS.week, state.week); render(); },
       }, Object.keys(PROGRAM.weeks).map((w) =>
-        h("option", { value: w, ...(w === state.week ? { selected: "" } : {}) }, `Week ${w} — ${PROGRAM.weeks[w].start}`))),
-      h("span", null, wk.days[state.day] ? wk.days[state.day].date : "")),
-    ...(wk.note ? [h("details", { id: "weeknote", open: "" },
-      h("summary", null, "Why these loads"),
-      h("p", null, wk.note))] : []),
-    h("nav", null, DAYS.slice(1).concat("Sun").map((d) => {
-      const has = !!wk.days[d];
-      const todayName = DAYS[new Date().getDay()];
-      return h("button", {
-        class: (d === state.day ? "active" : "") + (d === todayName ? " today" : ""),
-        onclick: () => { state.day = d; render(); },
-      }, has ? d : d + " ·");
-    })),
-    h("main", { id: "main" }));
-
-  const main = document.getElementById("main");
-  const day = wk.days[state.day];
-  if (!day) { main.append(h("div", { class: "rest" }, "Rest day.")); syncStatus(); return; }
+        h("option", { value: w, ...(w === state.week ? { selected: "" } : {}) }, `Week ${w}`))),
+      h("span", { class: "rule" }),
+      h("span", { class: "session" }, day ? `Session ${session}` : "Rest")),
+    h("nav", { id: "days" }, dayList.map((d) => h("button", {
+      class: [d === state.day ? "active" : "", d === todayName ? "today" : "", wk.days[d] ? "" : "rest"].join(" ").trim(),
+      onclick: () => { state.day = d; render(); },
+    }, d))));
+  if (!day) { main.append(h("div", { class: "rest" }, "Rest day")); syncStatus(); return; }
 
   day.exercises.forEach((ex, ei) => {
     const noteId = noteKey(state.week, state.day, ei);
     const noteSt = draft[noteId] || {};
     const ta = h("textarea", {
-      class: noteSt.body ? "" : "hide", placeholder: "note…",
+      class: noteSt.body ? "" : "hide", placeholder: "note",
       onchange: (e) => { saveDraft(noteId, { body: e.target.value }); enqueue("lift_notes", noteRow(state.week, state.day, "exercise", ei)); },
     }, noteSt.body || "");
+    const more = h("button", { class: "more" + (noteSt.body ? " on" : ""), "aria-label": "Exercise note",
+      onclick: () => { ta.classList.toggle("hide"); if (!ta.classList.contains("hide")) ta.focus(); } }, "＋ note");
     main.append(h("section", { class: "ex" },
-      h("h2", null, ex.name),
-      h("div", { class: "rx" }, ex.prescription),
-      ex.sets.map((s, si) => {
-        const id = setKey(state.week, state.day, ei, si);
-        const st = draft[id] || {};
-        const row = h("div", { class: "set" + (st.done ? " done" : "") },
-          h("button", { class: "tick", onclick: () => {
-            saveDraft(id, { done: !(draft[id] || {}).done });
-            enqueue("lift_sets", setRow(state.week, state.day, ei, si));
-            row.classList.toggle("done");
-          } }, "✓"),
-          h("input", { inputmode: "numeric", placeholder: s.reps || "reps", value: st.reps ?? "",
-            onchange: (e) => { saveDraft(id, { reps: e.target.value }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); } }),
-          h("span", { class: "x" }, "×"),
-          h("input", { inputmode: "decimal", placeholder: s.weight || "lb", value: st.weight ?? "",
-            onchange: (e) => { saveDraft(id, { weight: e.target.value }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); } }));
-        return row;
-      }),
-      h("button", { class: "notebtn", onclick: () => ta.classList.toggle("hide") }, "＋ note"),
+      h("div", { class: "ex-head" },
+        h("div", { class: "ex-num" }, String(ei + 1).padStart(2, "0")),
+        h("div", { class: "ex-title" }, h("h2", null, ex.name), h("div", { class: "rx" }, ex.prescription)),
+        more),
+      h("div", { class: "sets" },
+        ex.sets.map((s, si) => {
+          const id = setKey(state.week, state.day, ei, si);
+          const st = draft[id] || {};
+          const row = h("div", { class: "set" + (st.done ? " done" : "") },
+            h("button", { class: "tick", "aria-label": `Set ${si + 1} done`, onclick: () => {
+              saveDraft(id, { done: !(draft[id] || {}).done });
+              enqueue("lift_sets", setRow(state.week, state.day, ei, si));
+              row.classList.toggle("done");
+            } }, "✓"),
+            h("span", { class: "lbl" }, `Set ${si + 1}`),
+            h("label", { class: "field wt" },
+              h("input", { inputmode: "decimal", placeholder: String(s.weight || "").replace(/\s*lb$/i, ""), value: st.weight ?? "",
+                onchange: (e) => { saveDraft(id, { weight: e.target.value }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); } }),
+              h("span", null, "lb")),
+            h("label", { class: "field" },
+              h("input", { inputmode: "numeric", placeholder: s.reps || "", value: st.reps ?? "",
+                onchange: (e) => { saveDraft(id, { reps: e.target.value }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); } }),
+              h("span", null, "reps")));
+          return row;
+        })),
       ta));
   });
 
   const snId = noteKey(state.week, state.day);
   main.append(h("div", { id: "sessionnote" },
-    h("h2", null, "SESSION NOTES — feedback for the program"),
+    h("h2", null, "Session note", h("small", null, "feedback for the program")),
     h("textarea", {
-      placeholder: "volume, difficulty, swaps, aches…",
+      placeholder: "volume, difficulty, swaps, aches",
       onchange: (e) => { saveDraft(snId, { body: e.target.value }); enqueue("lift_notes", noteRow(state.week, state.day, "session")); },
     }, (draft[snId] || {}).body || "")));
   syncStatus();
@@ -355,7 +638,7 @@ function renderLogin(app) {
   const pass = h("input", { type: "password", placeholder: "password", autocomplete: "current-password" });
   const err = h("div", { id: "loginerr" });
   app.append(h("div", { id: "login" },
-    h("h1", null, "Lift"), email, pass, err,
+    h("h1", { class: "wordmark" }, "LIFTOS"), email, pass, err,
     h("button", { onclick: async () => {
       try { await login(email.value.trim(), pass.value); render(); flush(); }
       catch (e) { err.textContent = e.message; }
@@ -363,7 +646,7 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "meso-scoped-ids";
+const BUILD = "liftos-restyle";
 
 /* One-time: retire pre-meso-prefix draft keys ("w1-Mon-e0-s0", "note-w1-Mon").
    They belong to Meso 1 and would otherwise render as this meso's ticks/loads
@@ -387,9 +670,11 @@ fetch("program.json").then((r) => r.json()).then((p) => {
   state.week = localStorage.getItem(LS.week) || def.week;
   if (!PROGRAM.weeks[state.week]) state.week = def.week;
   state.day = def.day;
+  state.tab = "train";
   render();
+  pullWeights();
   const stamp = document.createElement("div");
-  stamp.style.cssText = "opacity:.4;font-size:11px;text-align:center;padding:8px";
+  stamp.style.cssText = "opacity:.35;font-size:11px;text-align:center;padding:8px;color:#8B8A88";
   navigator.serviceWorker?.getRegistration().then((reg) =>
     caches.keys().then((keys) => {
       stamp.textContent = `build ${BUILD} · sw ${reg ? (reg.active ? "active" : "installing") : "none"} · cache ${keys.join(",") || "none"}`;

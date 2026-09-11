@@ -273,6 +273,35 @@ async function pullWeights() {
     if (state.tab === "weight") render();
   } catch (_) { /* local mirror remains available offline */ }
 }
+// Sets/notes were write-only: a reinstall (or iOS clearing storage) wiped `draft` and the
+// app showed a blank week while Supabase held every tick. Rebuild this meso's draft from
+// the server. Skip queued rows (newer than the server) and leave reps/weight unset when
+// they equal the plan, so untouched fields keep showing the placeholder.
+async function pullLog() {
+  if (!auth || !PROGRAM) return;
+  try {
+    const t = await token();
+    const like = encodeURIComponent(`${mesoKey()}-*`);
+    const get = async (table) => {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=like.${like}&select=*`, {
+        headers: { apikey: SUPABASE_ANON, authorization: `Bearer ${t}` },
+      });
+      if (!r.ok) throw new Error(`${table}: ${r.status}`);
+      return (await r.json()).filter((row) => !queue[`${table}:${row.id}`]);
+    };
+    const [sets, notes] = await Promise.all([get("lift_sets"), get("lift_notes")]);
+    for (const s of sets) {
+      const p = {};
+      if (s.done) p.done = true;
+      if (s.actual_reps != null && String(s.actual_reps) !== String(s.planned_reps)) p.reps = String(s.actual_reps);
+      if (s.actual_weight != null && String(s.actual_weight) !== String(s.planned_weight)) p.weight = String(s.actual_weight);
+      draft[s.id] = { ...(draft[s.id] || {}), ...p };
+    }
+    for (const n of notes) if (n.body) draft[n.id] = { ...(draft[n.id] || {}), body: n.body };
+    localStorage.setItem(LS.draft, JSON.stringify(draft));
+    if (state.tab !== "weight") render();
+  } catch (_) { /* local draft remains */ }
+}
 
 /* ---------------- auth (Supabase GoTrue REST, no SDK) ---------------- */
 async function login(email, password) {
@@ -640,13 +669,13 @@ function renderLogin(app) {
   app.append(h("div", { id: "login" },
     h("h1", { class: "wordmark" }, "LIFTOS"), email, pass, err,
     h("button", { onclick: async () => {
-      try { await login(email.value.trim(), pass.value); render(); flush(); }
+      try { await login(email.value.trim(), pass.value); render(); flush(); pullWeights(); pullLog(); }
       catch (e) { err.textContent = e.message; }
     } }, "Log in")));
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "liftos-restyle";
+const BUILD = "liftos-pull-log";
 
 /* One-time: retire pre-meso-prefix draft keys ("w1-Mon-e0-s0", "note-w1-Mon").
    They belong to Meso 1 and would otherwise render as this meso's ticks/loads
@@ -673,6 +702,7 @@ fetch("program.json").then((r) => r.json()).then((p) => {
   state.tab = "train";
   render();
   pullWeights();
+  pullLog();
   const stamp = document.createElement("div");
   stamp.style.cssText = "opacity:.35;font-size:11px;text-align:center;padding:8px;color:#8B8A88";
   navigator.serviceWorker?.getRegistration().then((reg) =>

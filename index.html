@@ -99,8 +99,15 @@
     color: transparent; font-size: 20px; font-weight: 700;
   }
   .set.done .tick { background: var(--coral); color: var(--coral-ink); box-shadow: var(--glow); }
+  /* Missed = attempted and lost. Amber, the palette's existing "needs attention"
+     colour (the sync chip's pending state), NOT a second red: coral means "this
+     counted" everywhere in this app and a red ✗ beside a coral ✓ reads as two
+     flavours of the same thing. Unfilled and unglowing on purpose — a miss is
+     a real record, not an achievement. */
+  .set.miss .tick { border-color: var(--warn); color: var(--warn); box-shadow: none; }
   .set .lbl { flex: none; width: 40px; color: var(--dim); font-size: 14px; }
   .set.done .lbl { color: var(--coral); }
+  .set.miss .lbl { color: var(--warn); }
   .field {
     flex: 1; min-width: 0; display: flex; align-items: center;
     border: 1px solid var(--line2); border-radius: 9px; background: var(--field); padding: 0 8px;
@@ -292,7 +299,11 @@ async function pullLog() {
     const [sets, notes] = await Promise.all([get("lift_sets"), get("lift_notes")]);
     for (const s of sets) {
       const p = {};
-      if (s.done) p.done = true;
+      /* Pre-migration rows have result=null and only `done` to go on; a ticked one
+         is a made set by definition. An unticked null stays null — that ambiguity
+         is exactly what this column exists to stop inventing. */
+      const res = s.result || (s.done ? "made" : null);
+      if (res) p.result = res;
       if (s.actual_reps != null && String(s.actual_reps) !== String(s.planned_reps)) p.reps = String(s.actual_reps);
       if (s.actual_weight != null && String(s.actual_weight) !== String(s.planned_weight)) p.weight = String(s.actual_weight);
       draft[s.id] = { ...(draft[s.id] || {}), ...p };
@@ -406,7 +417,12 @@ function setRow(week, day, ei, si) {
     planned_reps: ex.sets[si].reps, planned_weight: ex.sets[si].weight,
     actual_reps: st.reps ?? ex.sets[si].reps,
     actual_weight: st.weight ?? ex.sets[si].weight,
-    done: !!st.done, ts: new Date().toISOString(),
+    // `done` and `result` are written together and must never disagree: `done`
+    // stays every existing consumer's "this set counted", `result` says WHY a set
+    // did not count. A missed set keeps its actual reps/weight — the attempt is
+    // real data, it just is not a completion.
+    done: st.result === "made", result: st.result || null,
+    ts: new Date().toISOString(),
   };
 }
 function noteRow(week, day, scope, ei) {
@@ -632,12 +648,27 @@ function render() {
         ex.sets.map((s, si) => {
           const id = setKey(state.week, state.day, ei, si);
           const st = draft[id] || {};
-          const row = h("div", { class: "set" + (st.done ? " done" : "") },
-            h("button", { class: "tick", "aria-label": `Set ${si + 1} done`, onclick: () => {
-              saveDraft(id, { done: !(draft[id] || {}).done });
-              enqueue("lift_sets", setRow(state.week, state.day, ei, si));
-              row.classList.toggle("done");
-            } }, "✓"),
+          /* Tri-state tick (Andrew, 2026-09-12): blank → made → missed → blank.
+             One control, because the row has no horizontal room for a second
+             button and the third tap is a correction, not a routine move. */
+          const tick = h("button", { class: "tick" }, "");
+          const paint = (res) => {
+            row.classList.toggle("done", res === "made");
+            row.classList.toggle("miss", res === "missed");
+            tick.textContent = res === "missed" ? "✗" : "✓";
+            tick.setAttribute("aria-label",
+              `Set ${si + 1}: ${res || "not logged"} — tap to change`);
+            tick.setAttribute("aria-pressed", String(!!res));
+          };
+          tick.onclick = () => {
+            const cur = (draft[id] || {}).result || null;
+            const next = cur === null ? "made" : cur === "made" ? "missed" : null;
+            saveDraft(id, { result: next });
+            enqueue("lift_sets", setRow(state.week, state.day, ei, si));
+            paint(next);
+          };
+          const row = h("div", { class: "set" },
+            tick,
             h("span", { class: "lbl" }, `Set ${si + 1}`),
             h("label", { class: "field wt" },
               h("input", { inputmode: "decimal", placeholder: String(s.weight || "").replace(/\s*lb$/i, ""), value: st.weight ?? "",
@@ -647,6 +678,7 @@ function render() {
               h("input", { inputmode: "numeric", placeholder: s.reps || "", value: st.reps ?? "",
                 onchange: (e) => { saveDraft(id, { reps: e.target.value }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); } }),
               h("span", null, "reps")));
+          paint(st.result || null);
           return row;
         })),
       ta));
@@ -675,7 +707,7 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "liftos-pull-log";
+const BUILD = "liftos-made-missed";
 
 /* One-time: retire pre-meso-prefix draft keys ("w1-Mon-e0-s0", "note-w1-Mon").
    They belong to Meso 1 and would otherwise render as this meso's ticks/loads
@@ -692,9 +724,28 @@ function pruneLegacyDrafts() {
   localStorage.setItem("lift.draft.pruned", "1");
 }
 
+/* One-time: local drafts predating the tri-state tick key completion as `done`.
+   Without this every already-ticked set in the current meso renders blank after
+   the update — the rows in Supabase are fine, but the phone paints off `draft`,
+   so it would read as a week of lost ticks. Purely a local rewrite: no row is
+   enqueued, so nothing is re-sent. */
+function migrateDoneToResult() {
+  if (localStorage.getItem("lift.draft.result")) return;
+  let n = 0;
+  for (const v of Object.values(draft)) {
+    if (v && v.done !== undefined) {
+      if (v.done && !v.result) { v.result = "made"; n++; }
+      delete v.done;
+    }
+  }
+  if (n) localStorage.setItem(LS.draft, JSON.stringify(draft));
+  localStorage.setItem("lift.draft.result", "1");
+}
+
 fetch("program.json").then((r) => r.json()).then((p) => {
   PROGRAM = p;
   pruneLegacyDrafts();
+  migrateDoneToResult();
   const def = pickDefault();
   state.week = localStorage.getItem(LS.week) || def.week;
   if (!PROGRAM.weeks[state.week]) state.week = def.week;

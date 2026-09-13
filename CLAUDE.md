@@ -38,7 +38,12 @@ Public GitHub Pages repo (`andrewmfoster.github.io/lift-tracker/`). Push to `mai
 - **The log records two things it cannot distinguish, and both produce plausible wrong
   numbers downstream** (found 07-26 building the LIFTOS viz; fix belongs HERE, at the source,
   not in the charts).
-  - **`done` is an untracked checkbox, not a skip record.** 15 sets in `~/.config/lift/sets.jsonl`
+  - **`result` ('made'/'missed') fixes half of this as of 2026-09-12** — the tick cycles
+    blank → made → missed, and `done` is now written as `result === 'made'` rather than
+    toggled on its own. Readers (AndrewOS `_made()`) prefer `result` and fall back to
+    `done` when it is null. **Rows logged before 09-12 are null and stay ambiguous** —
+    there is deliberately no backfill, so anything reading history still infers.
+  - **`done` was an untracked checkbox, not a skip record** (pre-09-12 rows). 15 sets in `~/.config/lift/sets.jsonl`
     carry full actual reps+weight with `done:false` — including a 1×255 rack jerk and a 1×190
     snatch. They were performed; the box was never ticked. Any consumer reading `done` as truth
     undercounts: week-1 tonnage came out 18% low and a "+31% volume" story was really +13%.
@@ -46,8 +51,8 @@ Public GitHub Pages repo (`andrewmfoster.github.io/lift-tracker/`). Push to `mai
     two conventions, and the only signal is a free-text note.
   - AndrewOS compensates for both (`_performed()` = done-or-has-actuals, `_side_factor()` parses
     `/per side|each side/` off the note) but that is **a parser guessing at prose**.
-  - Real fix, unbuilt: a **tri-state per set** (done / skipped / untouched, so a genuine skip is
-    a row) plus a **per-side boolean** on weight entry.
+  - Real fix: a **tri-state per set** — shipped 09-12 as `result`. The **per-side boolean**
+    on weight entry is still unbuilt, so `_side_factor()` is still a parser guessing at prose.
   - Third gap this exposed: a **dropped** exercise leaves no row at all, so it is invisible in
     set data — adherence must be measured against `program.json` slots, not logged rows. And a
     **moved** exercise (cable flye 07-18 → done 07-17) is indistinguishable from a dropped one.

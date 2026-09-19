@@ -12,19 +12,19 @@
             {
               "name": "Snatch — ramp",
               "group": "Snatch",
-              "prescription": "3×2 — ramp 95–135 lb (95 / 115 / 135)",
+              "prescription": "3×2 — ramp 115–135 lb (115 / 115 / 135)",
               "sets": [
                 {
                   "reps": "2",
-                  "weight": "95-135 lb"
+                  "weight": "115 lb"
                 },
                 {
                   "reps": "2",
-                  "weight": "95-135 lb"
+                  "weight": "115 lb"
                 },
                 {
                   "reps": "2",
-                  "weight": "95-135 lb"
+                  "weight": "135 lb"
                 }
               ],
               "role": "ramp"
@@ -51,7 +51,8 @@
                   "weight": "150 lb"
                 }
               ],
-              "role": "technique"
+              "role": "technique",
+              "cue": "crisp only, ~75%"
             },
             {
               "name": "Snatch — crisp singles",
@@ -67,7 +68,8 @@
                   "weight": "165 lb"
                 }
               ],
-              "role": "crisp singles"
+              "role": "crisp singles",
+              "cue": "slot ends on the first speed dip"
             },
             {
               "name": "Snatch pull",
@@ -95,11 +97,11 @@
               "sets": [
                 {
                   "reps": "3",
-                  "weight": "135-175 lb"
+                  "weight": "135 lb"
                 },
                 {
                   "reps": "3",
-                  "weight": "135-175 lb"
+                  "weight": "175 lb"
                 }
               ],
               "role": "warmup ramp"
@@ -122,7 +124,8 @@
                   "weight": "205 lb"
                 }
               ],
-              "role": "medium"
+              "role": "medium",
+              "cue": "3 s eccentric, RIR 2"
             },
             {
               "name": "Unilateral machine chest press",
@@ -141,7 +144,8 @@
                   "reps": "8-10",
                   "weight": "90 lb"
                 }
-              ]
+              ],
+              "cue": "3 s ecc, RIR 2"
             },
             {
               "name": "Chest-supported row",
@@ -156,7 +160,8 @@
                   "reps": "10-12",
                   "weight": "75 lb"
                 }
-              ]
+              ],
+              "cue": "3 s ecc"
             },
             {
               "name": "Plate-loaded pulldown",
@@ -175,7 +180,8 @@
                   "reps": "8-10",
                   "weight": "100 lb"
                 }
-              ]
+              ],
+              "cue": "3 s ecc"
             },
             {
               "name": "Hanging knee raise",
@@ -205,15 +211,15 @@
               "sets": [
                 {
                   "reps": "2",
-                  "weight": "135-175 lb"
+                  "weight": "135 lb"
                 },
                 {
                   "reps": "2",
-                  "weight": "135-175 lb"
+                  "weight": "155 lb"
                 },
                 {
                   "reps": "2",
-                  "weight": "135-175 lb"
+                  "weight": "175 lb"
                 }
               ],
               "role": "ramp"
@@ -240,7 +246,8 @@
                   "weight": "195 lb"
                 }
               ],
-              "role": "technique"
+              "role": "technique",
+              "cue": "crisp, ~72%"
             },
             {
               "name": "Clean & jerk — crisp singles",
@@ -256,20 +263,21 @@
                   "weight": "210 lb"
                 }
               ],
-              "role": "crisp singles"
+              "role": "crisp singles",
+              "cue": "hang clean + jerk is fine here"
             },
             {
               "name": "Front squat — warmup ramp",
               "group": "Front squat",
-              "prescription": "2×3 — ramp 95–125 lb (95 / 125)",
+              "prescription": "2×3 — ramp 135–145 lb (135 / 145)",
               "sets": [
                 {
                   "reps": "3",
-                  "weight": "95-125 lb"
+                  "weight": "135 lb"
                 },
                 {
                   "reps": "3",
-                  "weight": "95-125 lb"
+                  "weight": "145 lb"
                 }
               ],
               "role": "warmup ramp"
@@ -292,7 +300,8 @@
                   "weight": "155 lb"
                 }
               ],
-              "role": "light"
+              "role": "light",
+              "cue": "2–3 s pause in the hole, RIR 2–3"
             },
             {
               "name": "Unilateral machine shoulder press",
@@ -311,7 +320,8 @@
                   "reps": "8-10",
                   "weight": "115 lb"
                 }
-              ]
+              ],
+              "cue": "3 s ecc"
             },
             {
               "name": "Incline machine press",
@@ -330,7 +340,8 @@
                   "reps": "8-10",
                   "weight": "110 lb"
                 }
-              ]
+              ],
+              "cue": "3 s ecc"
             },
             {
               "name": "Cable row",
@@ -345,7 +356,8 @@
                   "reps": "10-12",
                   "weight": "75 lb"
                 }
-              ]
+              ],
+              "cue": "3 s ecc"
             },
             {
               "name": "Cable crunch",
@@ -440,11 +452,11 @@
               "sets": [
                 {
                   "reps": "3",
-                  "weight": "135-195 lb"
+                  "weight": "135 lb"
                 },
                 {
                   "reps": "3",
-                  "weight": "135-195 lb"
+                  "weight": "195 lb"
                 }
               ],
               "role": "warmup ramp"
@@ -471,7 +483,8 @@
                   "weight": "230 lb"
                 }
               ],
-              "role": "heavy"
+              "role": "heavy",
+              "cue": "RIR 2, no added tempo"
             },
             {
               "name": "Clean pull",
@@ -510,7 +523,8 @@
                   "weight": "100 lb"
                 }
               ],
-              "role": "2nd angle"
+              "role": "2nd angle",
+              "cue": "3 s ecc"
             },
             {
               "name": "Plate-loaded pulldown",
@@ -529,7 +543,8 @@
                   "reps": "8-10",
                   "weight": "100 lb"
                 }
-              ]
+              ],
+              "cue": "3 s ecc"
             },
             {
               "name": "Hanging leg raise",
@@ -559,7 +574,8 @@
                   "reps": "45",
                   "weight": ""
                 }
-              ]
+              ],
+              "cue": "bodyweight — per side"
             },
             {
               "name": "Dead hang",

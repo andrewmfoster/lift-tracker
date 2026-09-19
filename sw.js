@@ -1,6 +1,6 @@
 // program.json is network-first (fresh program on every online open, cache only
 // as offline fallback); other same-origin assets stay stale-while-revalidate.
-const CACHE = "lift-v11";  // bumped: numbered sessions + self-updating worker
+const CACHE = "lift-v12";  // bumped: per-set ramp rungs, role glyphs, cues
 const ASSETS = ["./", "index.html", "program.json", "manifest.json", "icon-192.png", "icon-512.png", "apple-touch-icon.png",
   "fonts/ChakraPetch-500.woff2", "fonts/ChakraPetch-600.woff2", "fonts/ChakraPetch-700.woff2", "fonts/Orbitron-800.woff2"];
 

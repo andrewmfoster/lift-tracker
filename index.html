@@ -94,11 +94,13 @@
      eat the horizontal room the weight and reps fields need. */
   .part + .part { margin-top: 10px; border-top: 1px solid var(--line2); padding-top: 8px; }
   .part-head { display: flex; align-items: baseline; gap: 8px; margin: 0 0 2px; flex-wrap: wrap; }
+  .part-head .ricon { flex: none; display: flex; color: var(--coral); opacity: .8; }
   .part-head .role {
     flex: none; color: var(--fg); font-size: 11px; font-weight: 700;
     letter-spacing: .08em; text-transform: uppercase;
   }
-  .part-head .rx { margin: 0; min-width: 0; }
+  .part-head .cue { color: var(--dim); font-size: 13px; min-width: 0; }
+  .part-head .cue::before { content: "· "; }
   .more { flex: none; background: none; border: 0; color: var(--dim); font-size: 14px; line-height: 1; padding: 0 2px 8px 10px; white-space: nowrap; }
   .more.on { color: var(--coral); }
   .sets { margin-top: 4px; }
@@ -461,6 +463,25 @@ function h(tag, attrs, ...kids) {
   return el;
 }
 
+/* Sub-panel glyphs. The prescription used to sit beside every phase and was almost all
+   redundant once each set carries its own weight — "3×2 — ramp 115–135 lb (115/115/135)"
+   restates three fields you are looking straight at. The role word plus a glyph says the
+   same thing in a fraction of the width; the cue (the part the fields CANNOT show) stays. */
+const ROLE_ICONS = [
+  [/ramp|warm/i, '<rect x="1" y="8" width="2.6" height="4"/><rect x="4.7" y="5" width="2.6" height="7"/><rect x="8.4" y="2" width="2.6" height="10"/>'],
+  [/single/i, '<circle cx="6" cy="6" r="2.6"/>'],
+  [/tech|crisp/i, '<circle cx="6" cy="6" r="4.4" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="6" cy="6" r="1.3"/>'],
+  [/heavy|medium|light|volume|work|back-off/i, '<rect x="1" y="4" width="2" height="4"/><rect x="9" y="4" width="2" height="4"/><rect x="3.4" y="5.3" width="5.2" height="1.4"/>'],
+];
+function roleIcon(role) {
+  const hit = ROLE_ICONS.find(([re]) => re.test(role || ""));
+  const el = document.createElement("span");
+  el.className = "ricon";
+  // innerHTML, not h(): SVG children need createElementNS and h() is createElement-only.
+  el.innerHTML = `<svg viewBox="0 0 12 12" width="12" height="12" fill="currentColor" aria-hidden="true">${(hit || ROLE_ICONS[3])[1]}</svg>`;
+  return el;
+}
+
 function pickDefault() {
   const weeks = Object.keys(PROGRAM.weeks);
   const todayISO = localDate();
@@ -684,8 +705,9 @@ function render() {
         // there would just repeat the exercise name back at you.
         panel.items.length > 1
           ? h("div", { class: "part-head" },
+              roleIcon(ex.role),
               h("span", { class: "role" }, ex.role || "Work"),
-              h("span", { class: "rx" }, ex.prescription))
+              ex.cue ? h("span", { class: "cue" }, ex.cue) : null)
           : null,
         h("div", { class: "sets" },
         ex.sets.map((s, si) => {
@@ -750,7 +772,7 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "liftos-panels-numbered-days";
+const BUILD = "liftos-ramp-rungs";
 
 /* One-time: retire pre-meso-prefix draft keys ("w1-Mon-e0-s0", "note-w1-Mon").
    They belong to Meso 1 and would otherwise render as this meso's ticks/loads

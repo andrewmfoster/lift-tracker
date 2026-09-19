@@ -23,8 +23,17 @@ Public GitHub Pages repo (`andrewmfoster.github.io/lift-tracker/`). Push to `mai
 - **Ship = bump the cache, or the phone keeps old code.** `index.html`/`sw.js` are
   stale-while-revalidate, so a code change alone can serve stale for a load or two. On any
   behavior change bump `sw.js` `CACHE` (e.g. `lift-v3`) AND the `BUILD` stamp in
-  `index.html`; the SW `activate` handler purges non-current caches. After deploy, close +
-  reopen the PWA once to force `activate`.
+  `index.html`; the SW `activate` handler purges non-current caches.
+  **The bump alone never reached the phone** (09-19, cost two ships). The purge only runs
+  once a NEW `sw.js` is fetched, and an installed PWA resumed from background may never
+  navigate to trigger that check — so the old worker serves the old `index.html`
+  indefinitely. `program.json` is network-first and updates anyway, which is the worst
+  case: **fresh program data rendered by last ship's code**, which reads as "the change
+  didn't take" rather than as a cache miss. Diagnose it by diffing the deployed
+  `index.html` against local before touching the code. Fixed in `index.html`: `reg.update()`
+  on load and on every `visibilitychange` back to visible, reload once on
+  `controllerchange`. Keep that, and verify a ship by the on-page build stamp, never by
+  "I reopened it".
 
 - **Offline queue: clear entries by identity, not by key.** `flush()` sends queued rows
   then removes them from `queue`. `enqueue()` assigns a *brand-new object* to

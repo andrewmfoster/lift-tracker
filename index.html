@@ -231,7 +231,6 @@
 const SUPABASE_URL = "https://bbxjkomhmiknwcbghqxe.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJieGprb21obWlrbndjYmdocXhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NDYzMjksImV4cCI6MjA5OTQyMjMyOX0.FruZWnkXvEcNnZlADjjqgKCtWF6nuqE7E9btOhvtXLA";
 
-const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const LS = {
   queue: "lift.queue", session: "lift.auth", week: "lift.week",
   draft: "lift.draft", // local mirror of row state so reopening shows ticks
@@ -620,10 +619,14 @@ function render() {
   if (isWeight) { renderWeight(main); syncStatus(); return; }
 
   const day = wk.days[state.day];
-  // The program doc's session headings can carry editorial asides; the label wants the letter.
-  const session = day ? (String(day.session).match(/[A-Za-z]+/) || ["?"])[0] : "Rest";
-  const todayName = DAYS[new Date().getDay()];
-  const dayList = DAYS.slice(1).concat("Sun").filter((d) => wk.days[d] || d === todayName || d === state.day);
+  /* Sessions are numbered, not named by weekday (Andrew, 2026-09-19): the lifting days
+     float, so a MON tab is a claim the program does not make. The doc still writes the
+     tables under weekday headings and `wk.days` is still keyed on them — state.day and
+     therefore setKey/noteKey are unchanged — the ordinal is display only. */
+  const dayList = Object.keys(wk.days).sort((a, b) => wk.days[a].date.localeCompare(wk.days[b].date));
+  const ordinal = (d) => String(dayList.indexOf(d) + 1);
+  const session = day ? ordinal(state.day) : "Rest";
+  const todayISO = localDate();
   main.before(
     h("div", { id: "weekbar" },
       h("span", { class: "meso" }, PROGRAM.meso || ""),
@@ -635,9 +638,9 @@ function render() {
       h("span", { class: "rule" }),
       h("span", { class: "session" }, day ? `Session ${session}` : "Rest")),
     h("nav", { id: "days" }, dayList.map((d) => h("button", {
-      class: [d === state.day ? "active" : "", d === todayName ? "today" : "", wk.days[d] ? "" : "rest"].join(" ").trim(),
+      class: [d === state.day ? "active" : "", wk.days[d].date === todayISO ? "today" : ""].join(" ").trim(),
       onclick: () => { state.day = d; render(); },
-    }, d))));
+    }, ordinal(d)))));
   if (!day) { main.append(h("div", { class: "rest" }, "Rest day")); syncStatus(); return; }
 
   /* Panels group CONSECUTIVE slots sharing `group` (emitted by gen_program.py), so a
@@ -747,7 +750,7 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "liftos-exercise-panels";
+const BUILD = "liftos-panels-numbered-days";
 
 /* One-time: retire pre-meso-prefix draft keys ("w1-Mon-e0-s0", "note-w1-Mon").
    They belong to Meso 1 and would otherwise render as this meso's ticks/loads
@@ -803,7 +806,26 @@ fetch("program.json").then((r) => r.json()).then((p) => {
     })
   ).catch(() => { stamp.textContent = `build ${BUILD}`; document.body.append(stamp); });
 });
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+/* Ship staleness (09-19): bumping CACHE only purges once a NEW sw.js is fetched, and an
+   installed PWA resumed from background may never navigate, so the old worker keeps
+   serving the old index.html indefinitely. program.json is network-first and updates
+   anyway, which is the worst case: fresh program data rendered by last ship's code.
+   So: ask for an update on every open and on every resume, and reload once the new
+   worker takes control. `reloading` guards the reload loop controllerchange can cause. */
+if ("serviceWorker" in navigator) {
+  let reloading = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (reloading) return;
+    reloading = true;
+    location.reload();
+  });
+  navigator.serviceWorker.register("sw.js").then((reg) => {
+    reg.update().catch(() => {});
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) reg.update().catch(() => {});
+    });
+  }).catch(() => {});
+}
 </script>
 </body>
 </html>

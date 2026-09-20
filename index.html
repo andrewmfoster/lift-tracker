@@ -92,7 +92,12 @@
 
   /* exercise card */
   .ex { background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin-bottom: 12px; padding: 14px 14px 10px; }
-  .ex-head { display: flex; align-items: flex-start; margin-bottom: 10px; }
+  /* The mast gives each movement a clear beginning without spending a second card border. */
+  .ex-head {
+    display: flex; align-items: flex-start; margin-bottom: 10px; padding: 10px 10px 9px;
+    border: 1px solid var(--line2); border-radius: 12px;
+    background: linear-gradient(100deg, rgba(242, 101, 90, .07), transparent 58%);
+  }
   .ex-num {
     flex: none; width: 44px; padding-right: 12px; margin-right: 12px; border-right: 1px solid var(--line2);
     color: var(--coral); font-size: 20px; font-weight: 700; line-height: 1.3; text-shadow: 0 0 10px rgba(242, 101, 90, .35);
@@ -103,7 +108,16 @@
      was the rejected variant. `--dim`, so it labels the panel without competing with it. */
   .ex h2 { display: flex; align-items: center; gap: 9px; }
   .ex h2 .fam { flex: none; color: var(--dim); display: flex; }
-  .ex .rx { color: var(--dim); font-size: 14px; margin: 3px 0 8px; }
+  /* A cue tells the lifter something the set fields cannot. Prescriptions do not: the
+     rows already show every set, load, and rep target. */
+  .ex .rx { color: var(--dim); font-size: 14px; margin: 3px 0 0; }
+  .complete-mark {
+    display: none; flex: none; align-items: center; margin: 2px 8px 0 6px;
+    color: var(--coral); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  }
+  .ex.complete { border-color: rgba(242, 101, 90, .5); }
+  .ex.complete .ex-head { border-color: rgba(242, 101, 90, .55); background: var(--coral-soft); }
+  .ex.complete .complete-mark { display: inline-flex; }
   /* Sub-panel: a movement's warmup / work / back-off inside one exercise card.
      A thin labelled strip, not a nested card — two card borders at phone width
      eat the horizontal room the weight and reps fields need. */
@@ -119,7 +133,7 @@
   .more { flex: none; background: none; border: 0; color: var(--dim); font-size: 14px; line-height: 1; padding: 0 2px 8px 10px; white-space: nowrap; }
   .more.on { color: var(--coral); }
   .sets { margin-top: 4px; }
-  .set { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+  .set { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
   .tick {
     width: 38px; height: 38px; border-radius: 8px; flex: none; padding: 0;
     border: 2px solid var(--coral); background: transparent; box-shadow: 0 0 8px rgba(242, 101, 90, .25);
@@ -132,7 +146,7 @@
      flavours of the same thing. Unfilled and unglowing on purpose — a miss is
      a real record, not an achievement. */
   .set.miss .tick { border-color: var(--warn); color: var(--warn); box-shadow: none; }
-  .set .lbl { flex: none; width: 40px; color: var(--dim); font-size: 14px; }
+  .set .lbl { flex: none; width: 16px; color: var(--dim); font-size: 14px; }
   .set.done .lbl { color: var(--coral); }
   .set.miss .lbl { color: var(--warn); }
   .field {
@@ -158,9 +172,13 @@
   }
   .field.step .nudge:first-child { border-right: 1px solid var(--line); }
   .field.step .nudge:last-child { border-left: 1px solid var(--line); }
+  /* Rep targets such as 10–12 need their digits, not their +/- controls, to own the
+     scarce width. Loads keep the default 34px buttons and their larger field share. */
+  .field.step:not(.wt) { flex: 1.15; }
+  .field.step:not(.wt) .nudge { width: 30px; }
   .field.step .val {
     flex: 1; min-width: 0; border: 0; background: none; color: var(--text); font: inherit;
-    text-align: center; padding: 10px 2px; font-size: 17px; font-weight: 600;
+    text-align: center; padding: 10px 2px; font-size: 17px; font-weight: 600; white-space: nowrap;
   }
   .field.step .val.plan { color: var(--faint); font-weight: 500; }
   .field.step .val em { font-style: normal; color: var(--faint); font-size: 13px; margin-left: 3px; }
@@ -608,6 +626,16 @@ function stepper(kind, planned, get, set) {
   // A planned load can still be a range ("135-205"); step from its top, the working target.
   const plan = String(planned ?? "").replace(/\s*lb$/i, "");
   const isSet = (v) => v !== undefined && v !== null && v !== "";
+  /* An exact planned value is not an override. This matters when a lifter opens an
+     exact-entry field and leaves it alone: keeping "115" in draft made the row look
+     permanently edited even though it still matched the program. */
+  const sameAsPlan = (v) => {
+    const clean = (x) => String(x ?? "").trim().replace(/\s*lb$/i, "").trim();
+    const a = clean(v), b = clean(plan);
+    if (a === b) return true;
+    return a !== "" && b !== "" && Number.isFinite(Number(a)) && Number(a) === Number(b);
+  };
+  const persist = (v) => set(!isSet(v) || sameAsPlan(v) ? null : v);
   const wrap = h("div", { class: "field step" + (kind === "wt" ? " wt" : "") });
   const val = h("button", { type: "button", class: "val", onclick: () => edit() });
   /* The nudge buttons are built ONCE and read the draft at click time. Rebuilding them on
@@ -618,12 +646,12 @@ function stepper(kind, planned, get, set) {
     onclick: () => {
       const cur = get();
       const base = lastNum(isSet(cur) ? cur : plan);
-      set(String(Math.max(0, Math.round((base + delta) * 10) / 10)));
+      persist(String(Math.max(0, Math.round((base + delta) * 10) / 10)));
       paint();
     } }, delta < 0 ? "−" : "+");
   const minus = nudge(-step), plus = nudge(step);
   const paint = () => {
-    const cur = get(), edited = isSet(cur);
+    const cur = get(), edited = isSet(cur) && !sameAsPlan(cur);
     wrap.classList.toggle("edited", edited);
     val.className = "val" + (edited ? "" : " plan");
     val.setAttribute("aria-label",
@@ -634,17 +662,24 @@ function stepper(kind, planned, get, set) {
   const edit = () => {
     const input = h("input", { inputmode: "decimal", placeholder: plan, value: get() ?? "" });
     let closed = false;
+    let dismiss;
     // change and blur both fire on commit; the guard keeps the second one a no-op.
     const commit = () => {
       if (closed) return; closed = true;
+      document.removeEventListener("pointerdown", dismiss, true);
       const v = input.value.trim();
-      set(v === "" ? null : v);
+      persist(v);
       wrap.replaceChildren(minus, val, plus);
       paint();
     };
     input.addEventListener("change", commit);
     input.addEventListener("blur", commit);
     wrap.replaceChildren(...[input, unit ? h("span", null, unit) : null].filter(Boolean));
+    /* Safari can keep a numeric field focused after a tap outside the row, especially
+       while the keypad remains open. Commit on that outside pointer as well, so a
+       tap-in/tap-out always restores the resting row. */
+    dismiss = (e) => { if (!wrap.contains(e.target)) commit(); };
+    document.addEventListener("pointerdown", dismiss, true);
     input.focus(); input.select();
   };
   wrap.replaceChildren(minus, val, plus);
@@ -884,6 +919,7 @@ function render() {
        the one thing you want to say something about, and the note already exists. Amber
        matches the tick, and the label names which set so the body does not have to. */
     const missLbl = h("span", { class: "miss-note-lbl hide" });
+    const completeMark = h("span", { class: "complete-mark" }, "Complete");
     const missedSets = () => panel.items
       .flatMap(({ ex, ei }) => ex.sets.map((_, si) => ({ ex, ei, si })))
       .filter(({ ei, si }) => (draft[setKey(state.week, state.day, ei, si)] || {}).result === "missed");
@@ -899,13 +935,14 @@ function render() {
         ta.classList.add("hide");
       }
     };
-    main.append(h("section", { class: "ex" },
+    const card = h("section", { class: "ex" },
       h("div", { class: "ex-head" },
         h("div", { class: "ex-num" }, String(pi + 1).padStart(2, "0")),
         h("div", { class: "ex-title" }, h("h2", null, famGlyph(panel.group), panel.group),
-          panel.items.length === 1
-            ? h("div", { class: "rx" }, panel.items[0].ex.prescription)
+          panel.items.length === 1 && panel.items[0].ex.cue
+            ? h("div", { class: "rx" }, panel.items[0].ex.cue)
             : null),
+        completeMark,
         more),
       panel.items.map(({ ex, ei }) => h("div", { class: "part" },
         // Single-slot panels already show the prescription in the head; a role strip
@@ -944,10 +981,11 @@ function render() {
                so this is expected to be a no-op on the phone this app actually runs on. */
             if (navigator.vibrate) { try { navigator.vibrate(12); } catch (e) {} }
             paintMiss(next === "missed");
+            paintComplete();
           };
           const row = h("div", { class: "set" },
             tick,
-            h("span", { class: "lbl" }, `Set ${si + 1}`),
+            h("span", { class: "lbl" }, String(si + 1)),
             stepper("wt", s.weight,
               () => (draft[id] || {}).weight,
               (v) => { saveDraft(id, { weight: v }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); }),
@@ -957,8 +995,13 @@ function render() {
           paint(st.result || null);
           return row;
         })))),
-      missLbl, ta));
+      missLbl, ta);
+    const isComplete = () => panel.items.every(({ ex, ei }) => ex.sets.every((_, si) =>
+      (draft[setKey(state.week, state.day, ei, si)] || {}).result === "made"));
+    const paintComplete = () => card.classList.toggle("complete", isComplete());
+    main.append(card);
     paintMiss(false);
+    paintComplete();
   });
 
   const snId = noteKey(state.week, state.day);
@@ -984,7 +1027,7 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "liftos-glyphs-steppers";
+const BUILD = "liftos-masts-complete";
 
 /* One-time: retire pre-meso-prefix draft keys ("w1-Mon-e0-s0", "note-w1-Mon").
    They belong to Meso 1 and would otherwise render as this meso's ticks/loads

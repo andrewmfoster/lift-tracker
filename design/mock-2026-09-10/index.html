@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LiftOS directions, 09-10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #1a1a1c; color: #ddd; font: 14px/1.4 -apple-system, system-ui, sans-serif; padding: 28px 24px 60px; }
+  h1.page { font-size: 18px; margin: 0 0 4px; color: #fff; }
+  .lede { color: #999; margin: 0 0 28px; max-width: 760px; }
+  .dir { margin-bottom: 48px; }
+  .dir > h2 { font-size: 16px; color: #fff; margin: 0 0 2px; }
+  .dir > p { color: #999; margin: 0 0 14px; max-width: 760px; }
+  .row { display: flex; gap: 22px; flex-wrap: wrap; }
+  .cap { color: #888; font-size: 12px; margin: 6px 0 0 4px; }
+
+  /* phone frame */
+  .phone { width: 360px; height: 740px; border-radius: 42px; overflow: hidden; position: relative;
+           box-shadow: 0 0 0 10px #000, 0 0 0 11px #333, 0 20px 50px rgba(0,0,0,.5); display: flex; flex-direction: column; }
+  .scr { flex: 1; overflow: hidden; padding: 48px 16px 0; }
+  .tabs { display: flex; padding: 10px 30px 26px; }
+  .tabs div { flex: 1; text-align: center; font-size: 11px; }
+  .tabs b { display: block; margin: 0 auto 4px; width: 22px; height: 22px; border-radius: 6px; }
+  svg { display: block; }
+
+  /* ===== A: Refined navy (current app, tightened, coral accent) ===== */
+  .A { --bg:#080C18; --card:#101627; --line:#1d2740; --tx:#e8ecf4; --dim:#7a8699; --ac:#F2685B; --ok:#4caf7d;
+       background: var(--bg); color: var(--tx); font-family: -apple-system, system-ui, sans-serif; }
+  .A .top { display:flex; align-items:baseline; justify-content:space-between; }
+  .A .eyebrow { font-size: 11px; letter-spacing: .12em; color: var(--dim); text-transform: uppercase; }
+  .A .title { font-size: 24px; font-weight: 700; margin: 2px 0 12px; }
+  .A .sync { font-size: 11px; color: var(--ok); }
+  .A .days { display:flex; gap:5px; margin-bottom: 12px; }
+  .A .days span { flex:1; text-align:center; padding:7px 0; border-radius:8px; background:var(--card); border:1px solid var(--line); color:var(--dim); font-size:12px; font-weight:600; }
+  .A .days .on { background: var(--ac); border-color: var(--ac); color:#1a0806; }
+  .A .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px; margin-bottom:10px; }
+  .A .card h3 { margin:0; font-size:15px; } .A .rx { color:var(--dim); font-size:12px; margin:2px 0 8px; }
+  .A .set { display:flex; gap:8px; align-items:center; margin:6px 0; }
+  .A .tick { width:38px; height:38px; border-radius:10px; border:1.5px solid var(--line); flex:none; display:grid; place-items:center; color:transparent; font-weight:700; }
+  .A .set.d .tick { background: var(--ok); border-color: var(--ok); color:#06101c; }
+  .A .in { flex:1; text-align:center; padding:9px 0; border-radius:8px; background:#0b1120; border:1px solid var(--line); font-variant-numeric: tabular-nums; }
+  .A .x { color: var(--dim); font-size:12px; }
+  .A .tabs { background: var(--card); border-top: 1px solid var(--line); color: var(--dim); }
+  .A .tabs b { background: var(--line); } .A .tabs .on { color: var(--ac); } .A .tabs .on b { background: var(--ac); }
+  .A .big { font-size: 52px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .A .big small { font-size: 18px; color: var(--dim); font-weight: 500; margin-left: 4px; }
+  .A .delta { color: var(--dim); font-size: 13px; margin-bottom: 12px; }
+  .A .chip { display:inline-block; padding:8px 12px; border-radius:20px; border:1px solid var(--line); color:var(--dim); font-size:13px; margin:0 6px 6px 0; }
+  .A .chip.on { border-color: var(--ac); color: var(--ac); background: rgba(242,104,91,.1); }
+  .A .btn { background: var(--ac); color:#1a0806; text-align:center; font-weight:700; padding:13px; border-radius:12px; margin-top:6px; }
+  .A .stamp { color: var(--dim); font-size: 12px; margin: 4px 0 10px; }
+  .A .li { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--line); font-size:13px; }
+  .A .li span:last-child { color: var(--dim); }
+
+  /* ===== B: Chalk / gym whiteboard (black, condensed, loud numbers) ===== */
+  .B { --bg:#0A0A0A; --card:#151515; --line:#2a2a2a; --tx:#F4F1EA; --dim:#8a8680; --ac:#FF5A4A;
+       background: var(--bg); color: var(--tx); font-family: 'Barlow Condensed', sans-serif; }
+  .B .mono { font-family: 'JetBrains Mono', monospace; }
+  .B .eyebrow { font-family:'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: .08em; color: var(--dim); }
+  .B .title { font-size: 40px; font-weight: 800; text-transform: uppercase; line-height: .95; margin: 4px 0 12px; }
+  .B .title em { font-style: normal; color: var(--ac); }
+  .B .days { display:flex; border:1px solid var(--line); margin-bottom: 14px; }
+  .B .days span { flex:1; text-align:center; padding:6px 0; font-size:15px; font-weight:700; color:var(--dim); border-right:1px solid var(--line); }
+  .B .days span:last-child { border-right: 0; } .B .days .on { background: var(--tx); color: var(--bg); }
+  .B .card { border-top: 2px solid var(--tx); padding: 8px 0 10px; }
+  .B .card h3 { margin:0; font-size:22px; font-weight:700; text-transform:uppercase; letter-spacing:.01em; }
+  .B .rx { font-family:'JetBrains Mono', monospace; color:var(--dim); font-size:11px; margin:0 0 6px; }
+  .B .set { display:flex; align-items:center; gap:10px; padding:4px 0; border-bottom:1px dashed var(--line); }
+  .B .set .n { font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--dim); width:18px; }
+  .B .set .v { font-size: 26px; font-weight: 700; flex:1; }
+  .B .set .v i { font-style:normal; color: var(--dim); font-size: 18px; margin: 0 4px; }
+  .B .tick { width:34px; height:34px; border:2px solid var(--line); display:grid; place-items:center; color:transparent; font-weight:800; }
+  .B .set.d .tick { background: var(--ac); border-color: var(--ac); color: var(--bg); }
+  .B .set.d .v { color: var(--dim); text-decoration: line-through; text-decoration-thickness: 2px; }
+  .B .tabs { border-top: 2px solid var(--tx); color: var(--dim); font-family:'JetBrains Mono', monospace; }
+  .B .tabs b { background: var(--line); border-radius: 0; } .B .tabs .on { color: var(--tx); } .B .tabs .on b { background: var(--ac); }
+  .B .big { font-size: 110px; font-weight: 800; line-height: .85; letter-spacing: -.02em; margin-top: 6px; }
+  .B .big small { font-size: 26px; color: var(--dim); font-weight: 600; }
+  .B .delta { font-family:'JetBrains Mono', monospace; font-size:11.5px; color: var(--dim); margin: 8px 0 12px; }
+  .B .delta b { color: var(--ac); font-weight: 600; }
+  .B .chip { display:inline-block; padding:6px 12px; border:2px solid var(--line); font-size:17px; font-weight:700; text-transform:uppercase; color:var(--dim); margin:0 6px 6px 0; }
+  .B .chip.on { background: var(--tx); color: var(--bg); border-color: var(--tx); }
+  .B .btn { background: var(--ac); color: var(--bg); text-align:center; font-size:24px; font-weight:800; text-transform:uppercase; padding:10px; margin-top: 6px; }
+  .B .stamp { font-family:'JetBrains Mono', monospace; font-size: 11px; color: var(--dim); margin: 2px 0 12px; }
+  .B .li { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed var(--line); font-size:19px; font-weight:600; }
+  .B .li span:last-child { font-family:'JetBrains Mono', monospace; font-size:11px; color: var(--dim); align-self:center; }
+
+  /* ===== C: Instrument panel (graphite, hairlines, dense data) ===== */
+  .C { --bg:#111214; --card:#17181B; --line:#26282D; --tx:#E6E7EA; --dim:#6F737C; --ac:#FF6B5C; --ok:#9BE38A;
+       background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif; font-feature-settings: "tnum"; }
+  .C .eyebrow { font-size: 10px; letter-spacing: .14em; color: var(--dim); text-transform: uppercase; font-weight: 600; }
+  .C .title { font-size: 20px; font-weight: 600; margin: 3px 0 10px; }
+  .C .hud { display:grid; grid-template-columns: repeat(3,1fr); border:1px solid var(--line); border-radius: 10px; margin-bottom: 12px; }
+  .C .hud div { padding: 8px 10px; border-right: 1px solid var(--line); }
+  .C .hud div:last-child { border-right: 0; }
+  .C .hud b { display:block; font-size: 17px; font-weight: 600; } .C .hud span { font-size: 9.5px; color: var(--dim); letter-spacing:.1em; text-transform: uppercase; }
+  .C .days { display:flex; gap: 4px; margin-bottom: 12px; }
+  .C .days span { flex:1; text-align:center; font-size:11px; color:var(--dim); padding-bottom:6px; border-bottom:2px solid var(--line); }
+  .C .days .on { color: var(--tx); border-color: var(--ac); }
+  .C .card { border:1px solid var(--line); border-radius: 10px; margin-bottom: 8px; background: var(--card); }
+  .C .card .hd { display:flex; justify-content:space-between; padding: 9px 11px; border-bottom: 1px solid var(--line); }
+  .C .card h3 { margin:0; font-size: 13.5px; font-weight: 600; } .C .rx { font-size: 11px; color: var(--dim); }
+  .C table { width:100%; border-collapse: collapse; font-size: 13px; }
+  .C td { padding: 7px 11px; border-bottom: 1px solid var(--line); } .C tr:last-child td { border-bottom: 0; }
+  .C td.k { color: var(--dim); width: 28px; font-size: 11px; } .C td.r { text-align: right; }
+  .C .dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--line); display: inline-block; vertical-align: middle; }
+  .C tr.d .dot { background: var(--ok); border-color: var(--ok); } .C tr.d td { color: var(--dim); }
+  .C .tabs { border-top: 1px solid var(--line); color: var(--dim); }
+  .C .tabs b { background: transparent; border: 1.5px solid var(--line); border-radius: 50%; } .C .tabs .on { color: var(--tx); } .C .tabs .on b { border-color: var(--ac); background: var(--ac); }
+  .C .big { font-size: 46px; font-weight: 300; letter-spacing: -.02em; }
+  .C .big small { font-size: 14px; color: var(--dim); margin-left: 4px; }
+  .C .delta { font-size: 12px; color: var(--dim); margin-bottom: 10px; }
+  .C .seg { display:flex; border:1px solid var(--line); border-radius: 8px; margin-bottom: 8px; overflow:hidden; }
+  .C .seg span { flex:1; text-align:center; font-size: 12px; padding: 8px 0; color: var(--dim); border-right: 1px solid var(--line); }
+  .C .seg span:last-child { border-right: 0; } .C .seg .on { background: #2a1c1b; color: var(--ac); }
+  .C .btn { border:1px solid var(--ac); color: var(--ac); text-align:center; font-weight:600; padding:11px; border-radius:8px; margin-top:4px; font-size: 14px; }
+  .C .stamp { font-size: 11px; color: var(--dim); margin: 0 0 10px; }
+
+  /* ===== D: Paper (light, editorial, serif numerals) ===== */
+  .D { --bg:#F4F0E8; --card:#FBF8F2; --line:#E0D9CC; --tx:#1C1A17; --dim:#8C8579; --ac:#E0503F; --ok:#2F7A55;
+       background: var(--bg); color: var(--tx); font-family: 'Inter', sans-serif; }
+  .D .eyebrow { font-size: 11px; color: var(--dim); letter-spacing: .04em; }
+  .D .title { font-family:'Fraunces', serif; font-size: 30px; font-weight: 500; margin: 0 0 12px; line-height: 1.05; }
+  .D .days { display:flex; justify-content: space-between; margin-bottom: 14px; }
+  .D .days span { width: 38px; height: 38px; border-radius: 50%; display:grid; place-items:center; font-size:12px; font-weight:600; color:var(--dim); }
+  .D .days .on { background: var(--tx); color: var(--bg); }
+  .D .card { background: var(--card); border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; box-shadow: 0 1px 0 var(--line); }
+  .D .card h3 { font-family:'Fraunces', serif; font-weight: 500; font-size: 18px; margin: 0; }
+  .D .rx { color: var(--dim); font-size: 12px; margin: 1px 0 8px; }
+  .D .set { display:flex; align-items:center; gap: 10px; padding: 5px 0; }
+  .D .tick { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--line); display:grid; place-items:center; color: transparent; font-size: 14px; }
+  .D .set.d .tick { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .D .set .v { font-family:'Fraunces', serif; font-size: 20px; flex:1; } .D .set .v i { font-style: normal; color: var(--dim); font-size: 14px; margin: 0 3px; }
+  .D .set.d .v { color: var(--dim); }
+  .D .tabs { background: var(--card); color: var(--dim); box-shadow: 0 -1px 0 var(--line); }
+  .D .tabs b { background: var(--line); border-radius: 50%; } .D .tabs .on { color: var(--tx); } .D .tabs .on b { background: var(--ac); }
+  .D .big { font-family:'Fraunces', serif; font-size: 72px; font-weight: 500; line-height: 1; letter-spacing: -.02em; }
+  .D .big small { font-family: 'Inter', sans-serif; font-size: 16px; color: var(--dim); margin-left: 4px; }
+  .D .delta { color: var(--dim); font-size: 13px; margin: 6px 0 12px; }
+  .D .chip { display:inline-block; padding: 8px 13px; border-radius: 20px; background: var(--card); color: var(--dim); font-size: 13px; margin: 0 6px 6px 0; box-shadow: inset 0 0 0 1px var(--line); }
+  .D .chip.on { background: var(--tx); color: var(--bg); box-shadow: none; }
+  .D .btn { background: var(--ac); color: #fff; text-align: center; font-weight: 600; padding: 13px; border-radius: 30px; margin-top: 6px; }
+  .D .stamp { color: var(--dim); font-size: 12px; margin: 0 0 12px; }
+  .D .li { display:flex; justify-content:space-between; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .D .li span:first-child { font-family:'Fraunces', serif; font-size: 16px; } .D .li span:last-child { color: var(--dim); }
+</style>
+</head>
+<body>
+<h1 class="page">LiftOS: four directions</h1>
+<p class="lede">Each direction shows the workout screen and the new Weight screen (log an entry with tags, chart of every point plus a 7-day average line). The accent is the coral from the LiftOS icon. All numbers are made up.</p>
+<div id="out"></div>
+
+<script>
+// Stand-in data only (same shape as real, invented values).
+const W = [];
+let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+for (let i = 0; i < 34; i++) {
+  const day = Math.floor(i * 0.9);
+  const evening = rnd() > .7;
+  W.push({ day, v: +(186.4 - day * 0.09 + (rnd() - .5) * 2.4 + (evening ? 1.6 : 0)).toFixed(1), evening });
+}
+const avg = [];
+for (let d = 0; d <= W[W.length-1].day; d++) {
+  const pts = W.filter(p => p.day > d - 7 && p.day <= d);
+  if (pts.length) avg.push({ day: d, v: pts.reduce((s,p)=>s+p.v,0)/pts.length });
+}
+
+function chart(o) {
+  const w = 328, h = o.h || 150, pad = 6;
+  const vs = W.map(p=>p.v), lo = Math.min(...vs) - .5, hi = Math.max(...vs) + .5, maxD = W[W.length-1].day;
+  const X = d => pad + (d / maxD) * (w - pad*2), Y = v => pad + (1 - (v - lo)/(hi - lo)) * (h - pad*2);
+  let s = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
+  if (o.grid) for (let i=1;i<4;i++) s += `<line x1="0" x2="${w}" y1="${h*i/4}" y2="${h*i/4}" stroke="${o.grid}" stroke-width="1" ${o.dash?'stroke-dasharray="2 4"':''}/>`;
+  for (const p of W) {
+    const hollow = o.hollowEvening && p.evening;
+    s += `<circle cx="${X(p.day)}" cy="${Y(p.v)}" r="${o.r||2.6}" fill="${hollow?'none':o.dot}" stroke="${o.dot}" stroke-width="${hollow?1.2:0}" opacity="${o.dotOp||.55}"/>`;
+  }
+  s += `<path d="${avg.map((p,i)=>(i?'L':'M')+X(p.day).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ')}" fill="none" stroke="${o.line}" stroke-width="${o.lw||2.4}" stroke-linejoin="round" stroke-linecap="round"/>`;
+  const last = avg[avg.length-1];
+  s += `<circle cx="${X(last.day)}" cy="${Y(last.v)}" r="4" fill="${o.line}"/>`;
+  return s + '</svg>';
+}
+
+const tabs = (on) => `<div class="tabs"><div class="${on==='t'?'on':''}"><b></b>Train</div><div class="${on==='w'?'on':''}"><b></b>Weight</div><div><b></b>History</div></div>`;
+const phone = (cls, inner, tab, cap) => `<div><div class="phone ${cls}"><div class="scr">${inner}</div>${tabs(tab)}</div><div class="cap">${cap}</div></div>`;
+const EX = [
+  { n: 'Back Squat', rx: '4 x 5 @ 225, RPE 7', sets: [[5,225,1],[5,225,1],[5,225,0],[5,225,0]] },
+  { n: 'Romanian Deadlift', rx: '3 x 8 @ 185', sets: [[8,185,0],[8,185,0],[8,185,0]] },
+];
+const days = (fmt) => ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d => `<span class="${d==='Thu'?'on':''}">${fmt?fmt(d):d}</span>`).join('');
+const last = W[W.length-1], avgNow = avg[avg.length-1].v, avgWk = avg[avg.length-8].v;
+const dlt = (avgNow - avgWk).toFixed(1);
+
+// ---- A
+const A_train = `<div class="top"><span class="eyebrow">Meso 2 · Week 3</span><span class="sync">synced</span></div>
+  <div class="title">Thursday · Lower</div><div class="days">${days()}</div>
+  ${EX.map(e=>`<div class="card"><h3>${e.n}</h3><div class="rx">${e.rx}</div>${e.sets.map(s=>`<div class="set ${s[2]?'d':''}"><div class="tick">✓</div><div class="in">${s[0]}</div><span class="x">×</span><div class="in">${s[1]}</div></div>`).join('')}</div>`).join('')}`;
+const A_weight = `<div class="top"><span class="eyebrow">Bodyweight</span><span class="sync">synced</span></div>
+  <div class="big">${avgNow.toFixed(1)}<small>lb, 7-day avg</small></div>
+  <div class="delta">${dlt} lb vs last week · ${W.length} entries</div>
+  <div class="card">${chart({dot:'#7a8699', line:'#F2685B', grid:'#1d2740'})}</div>
+  <div class="card"><div class="eyebrow" style="margin-bottom:6px">Log weight</div>
+  <div class="in" style="font-size:28px;padding:10px 0;font-weight:700">184.6</div>
+  <div class="stamp">Thu Sep 10 · 7:12 AM, stamped automatically</div>
+  <span class="chip on">Fasted</span><span class="chip">Fed</span><br><span class="chip on">Before training</span><span class="chip">After training</span>
+  <div class="btn">Save</div></div>`;
+
+// ---- B
+const B_train = `<div class="eyebrow">MESO 2 / WK 3 / THU · <span style="color:#7fd97f">SYNCED</span></div>
+  <div class="title">Lower <em>Day</em></div><div class="days">${days(d=>d[0])}</div>
+  ${EX.map(e=>`<div class="card"><h3>${e.n}</h3><div class="rx">${e.rx}</div>${e.sets.map((s,i)=>`<div class="set ${s[2]?'d':''}"><span class="n">${i+1}</span><span class="v">${s[0]}<i>×</i>${s[1]}</span><div class="tick">✓</div></div>`).join('')}</div>`).join('')}`;
+const B_weight = `<div class="eyebrow">BODYWEIGHT / 7-DAY AVG</div>
+  <div class="big">${avgNow.toFixed(1)}<small> LB</small></div>
+  <div class="delta"><b>${dlt}</b> VS LAST WEEK · ${W.length} ENTRIES</div>
+  ${chart({dot:'#F4F1EA', dotOp:.35, line:'#FF5A4A', lw:3, grid:'#2a2a2a', dash:1, h:120, hollowEvening:1})}
+  <div style="border-top:2px solid #F4F1EA;margin-top:12px;padding-top:10px">
+  <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:48px;font-weight:800">184.6</span><span class="stamp">THU 09.10 · 07:12</span></div>
+  <span class="chip on">Fasted</span><span class="chip">Fed</span><span class="chip on">Pre</span><span class="chip">Post</span>
+  <div class="btn">Log it</div></div>`;
+
+// ---- C
+const C_train = `<div class="eyebrow">Meso 2 · Week 3 · Thu Sep 10</div><div class="title">Lower</div>
+  <div class="hud"><div><b>2/7</b><span>sets</span></div><div><b>4.5k</b><span>lb moved</span></div><div><b>${avgNow.toFixed(1)}</b><span>bodywt</span></div></div>
+  <div class="days">${days()}</div>
+  ${EX.map(e=>`<div class="card"><div class="hd"><h3>${e.n}</h3><span class="rx">${e.rx}</span></div><table>${e.sets.map((s,i)=>`<tr class="${s[2]?'d':''}"><td class="k">S${i+1}</td><td>${s[0]} reps</td><td class="r">${s[1]} lb</td><td class="r" style="width:30px"><span class="dot"></span></td></tr>`).join('')}</table></div>`).join('')}`;
+const C_weight = `<div class="eyebrow">Bodyweight</div>
+  <div class="big">${avgNow.toFixed(1)}<small>lb · 7d avg</small></div>
+  <div class="delta">${dlt} lb/wk · last entry ${last.v} · ${W.length} entries · hollow = evening</div>
+  <div class="card" style="padding:8px 0">${chart({dot:'#E6E7EA', dotOp:.5, line:'#FF6B5C', lw:1.8, r:2.2, grid:'#26282D', h:130, hollowEvening:1})}</div>
+  <div class="card" style="padding:11px">
+  <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:30px;font-weight:500">184.6 <span style="font-size:12px;color:#6F737C">lb</span></span><span class="stamp">09/10 07:12</span></div>
+  <div class="seg"><span class="on">Fasted</span><span>Fed</span></div>
+  <div class="seg"><span class="on">Pre-training</span><span>Post-training</span></div>
+  <div class="btn">Save entry</div></div>`;
+
+// ---- D
+const D_train = `<div class="eyebrow">Meso 2 · Week 3</div><div class="title">Thursday,<br>lower body</div>
+  <div class="days">${days(d=>d[0])}</div>
+  ${EX.map(e=>`<div class="card"><h3>${e.n}</h3><div class="rx">${e.rx}</div>${e.sets.map(s=>`<div class="set ${s[2]?'d':''}"><span class="v">${s[0]}<i>×</i>${s[1]}</span><div class="tick">✓</div></div>`).join('')}</div>`).join('')}`;
+const D_weight = `<div class="eyebrow">Bodyweight, 7-day average</div>
+  <div class="big">${avgNow.toFixed(1)}<small>lb</small></div>
+  <div class="delta">${dlt} lb since last week</div>
+  <div class="card" style="padding:10px 0">${chart({dot:'#8C8579', dotOp:.5, line:'#E0503F', h:130})}</div>
+  <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><span class="big" style="font-size:40px">184.6</span><span class="stamp">Thu, 7:12 am</span></div>
+  <span class="chip on">Fasted</span><span class="chip">Fed</span><span class="chip on">Before training</span><span class="chip">After</span>
+  <div class="btn">Save</div></div>`;
+
+const dirs = [
+  ['A', 'A. Refined navy', 'The app you have now, tightened up: same dark navy and cards, coral accent from the icon, clearer hierarchy. Safest move.', A_train, A_weight],
+  ['B', 'B. Chalkboard', 'Black and off-white, big condensed numbers, hard lines. Built to read at arm\'s length between sets. Loudest of the four.', B_train, B_weight],
+  ['C', 'C. Instrument panel', 'Graphite, hairlines, numbers in tables, a stats strip on the workout screen (including today\'s bodyweight). Most data-dense. Evening weigh-ins show as hollow dots.', C_train, C_weight],
+  ['D', 'D. Paper', 'Light, warm off-white, serif numbers, rounded and calm. The only light option; less gym, more notebook.', D_train, D_weight],
+];
+document.getElementById('out').innerHTML = dirs.map(([c,t,p,tr,wt]) =>
+  `<div class="dir"><h2>${t}</h2><p>${p}</p><div class="row">${phone(c,tr,'t','Workout')}${phone(c,wt,'w','Weight: chart + log')}</div></div>`).join('');
+</script>
+</body>
+</html>

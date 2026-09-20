@@ -29,7 +29,7 @@
   body {
     margin: 0; background: var(--bg); color: var(--text);
     font: 500 16px/1.4 var(--ui);
-    padding: env(safe-area-inset-top) 0 calc(96px + env(safe-area-inset-bottom));
+    padding: env(safe-area-inset-top) 0 calc(104px + env(safe-area-inset-bottom));
   }
   button, input, select, textarea { font-family: inherit; }
   button { cursor: pointer; }
@@ -49,6 +49,17 @@
   #sync.ok::before { background: var(--coral); box-shadow: var(--glow); }
   #sync.pending { color: var(--warn); border-color: rgba(227, 166, 74, .5); }
   #sync.pending::before { background: var(--warn); }
+  /* Rest clock. Counts up from the last tick; no alarm, it reports rather than nags. */
+  #rest {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line2);
+    font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--text); font-variant-numeric: tabular-nums;
+  }
+  #rest span { color: var(--dim); }
+  #rest + #sync { margin-left: 0; }
+  #rest.hide { display: none; }
+  #rest.hide + #sync { margin-left: auto; }
 
   /* meso / week / session line */
   #weekbar { display: flex; align-items: center; gap: 12px; padding: 8px 18px 12px; color: var(--dim); }
@@ -81,13 +92,17 @@
 
   /* exercise card */
   .ex { background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin-bottom: 12px; padding: 14px 14px 10px; }
-  .ex-head { display: flex; align-items: flex-start; }
+  .ex-head { display: flex; align-items: flex-start; margin-bottom: 10px; }
   .ex-num {
     flex: none; width: 44px; padding-right: 12px; margin-right: 12px; border-right: 1px solid var(--line2);
     color: var(--coral); font-size: 20px; font-weight: 700; line-height: 1.3; text-shadow: 0 0 10px rgba(242, 101, 90, .35);
   }
   .ex-title { flex: 1; min-width: 0; }
   .ex h2 { margin: 0; font-size: 18px; font-weight: 600; line-height: 1.25; }
+  /* Family glyph inline before the title (Andrew, 09-19): stacking it over the ordinal
+     was the rejected variant. `--dim`, so it labels the panel without competing with it. */
+  .ex h2 { display: flex; align-items: center; gap: 9px; }
+  .ex h2 .fam { flex: none; color: var(--dim); display: flex; }
   .ex .rx { color: var(--dim); font-size: 14px; margin: 3px 0 8px; }
   /* Sub-panel: a movement's warmup / work / back-off inside one exercise card.
      A thin labelled strip, not a nested card — two card borders at phone width
@@ -133,6 +148,25 @@
   .field input::placeholder { color: var(--faint); font-weight: 500; }
   .field span { flex: none; color: var(--faint); font-size: 13px; padding-left: 4px; }
   .field:focus-within { border-color: var(--coral); }
+  /* Stepper (Andrew, 09-19). The keypad mid-set is the wrong control: +/-5 lb and +/-1 rep
+     cover nearly every deviation, and the number stays tappable for an exact value.
+     An adjusted field goes coral, so a deviation from the plan is visible at a glance. */
+  .field.step { padding: 0; }
+  .field.step .nudge {
+    flex: none; width: 34px; align-self: stretch; border: 0; background: none; color: var(--dim);
+    font-size: 19px; font-weight: 700; line-height: 1;
+  }
+  .field.step .nudge:first-child { border-right: 1px solid var(--line); }
+  .field.step .nudge:last-child { border-left: 1px solid var(--line); }
+  .field.step .val {
+    flex: 1; min-width: 0; border: 0; background: none; color: var(--text); font: inherit;
+    text-align: center; padding: 10px 2px; font-size: 17px; font-weight: 600;
+  }
+  .field.step .val.plan { color: var(--faint); font-weight: 500; }
+  .field.step .val em { font-style: normal; color: var(--faint); font-size: 13px; margin-left: 3px; }
+  .field.step.edited { border-color: rgba(242, 101, 90, .55); }
+  .field.step.edited .val { color: var(--coral); }
+  .field.step input { text-align: center; padding: 10px 2px; }
   .ex textarea, #sessionnote textarea {
     width: 100%; min-height: 64px; margin-top: 8px;
     background: var(--field); color: var(--text); border: 1px solid var(--line2);
@@ -140,15 +174,27 @@
   }
   .ex textarea:focus, #sessionnote textarea:focus { border-color: var(--coral); }
   .ex textarea.hide { display: none; }
+  /* A third tap (miss) opens this panel's existing note, amber and labelled with the set.
+     Reuses the per-panel note field — no new row and no schema change. */
+  .miss-note { border-color: rgba(227, 166, 74, .55) !important; }
+  .miss-note-lbl {
+    display: block; color: var(--warn); font-size: 11px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; margin: 10px 0 -2px;
+  }
+  .miss-note-lbl.hide { display: none; }
   #sessionnote { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; margin: 4px 0 12px; }
   #sessionnote h2 { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; margin: 0; }
   #sessionnote h2 small { color: var(--dim); font-size: 13px; font-weight: 500; }
   .rest { text-align: center; color: var(--dim); padding: 60px 0; font-size: 16px; letter-spacing: .08em; text-transform: uppercase; }
 
   /* bottom tab bar */
+  /* Anchored, not floating (Andrew, 09-19): full bleed to the bottom edge, hairline on
+     top only, no ring shadow, and the safe-area inset as real padding under the labels. */
   #tabbar {
-    position: fixed; left: 14px; right: 14px; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 5;
-    display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--ring);
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+    display: flex; background: var(--card); border: 0; border-top: 1px solid var(--line2);
+    border-radius: 0; box-shadow: none;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
   }
   #tabbar button {
     flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px;
@@ -178,7 +224,6 @@
     color: var(--dim); font-size: 14px; font-weight: 600;
   }
   .range button.active { color: var(--coral); border-color: var(--coral); background: var(--coral-soft); }
-  .wcard h2 { margin: 0 0 14px; font-size: 26px; font-weight: 700; }
   .wfield { display: flex; align-items: center; border: 1px solid var(--line2); border-radius: 14px; background: var(--field); }
   .wfield input {
     flex: 1; min-width: 0; border: 0; background: none; outline: none; padding: 12px 18px;
@@ -202,14 +247,19 @@
     background: var(--coral); color: var(--coral-ink); font-size: 22px; font-weight: 700; box-shadow: var(--glow);
   }
   .save-weight:active, .chip:active, .tick:active { transform: scale(.98); }
-  .wcard.editing h2::after { content: " · editing"; color: var(--coral); font-size: 16px; font-weight: 600; }
-  .recent { margin: 0 6px 20px; padding: 0 4px; }
-  .recent h3 { margin: 0 0 6px; color: var(--dim); font-size: 13px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
-  .weight-entry { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-top: 1px solid var(--line); }
-  .weight-entry strong { flex: none; min-width: 64px; font-size: 18px; font-weight: 700; }
-  .weight-entry span { flex: 1; color: var(--dim); font-size: 14px; }
-  .weight-entry button { flex: none; padding: 6px 10px; border: 1px solid var(--line2); border-radius: 8px; background: var(--field); color: var(--dim); font-size: 13px; font-weight: 600; }
-  .weight-sub { color: var(--dim); font-size: 14px; margin: 6px 0 0; }
+  /* The seam that replaces a card boundary inside the merged weight card (Andrew, 09-19):
+     one card, a labelled hairline, and the entry row always visible under it. */
+  .hair-lbl { display: flex; align-items: center; gap: 10px; margin: 22px 0 14px; }
+  .hair-lbl::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .hair-lbl .eyebrow { margin: 0; }
+  /* A picked dot on the chart IS the recent list: tapping one loads that weigh-in here. */
+  .picked { display: flex; align-items: center; gap: 10px; margin-top: 12px; color: var(--dim); font-size: 13.5px; }
+  .picked b { color: var(--coral); font-weight: 700; }
+  .picked button {
+    margin-left: auto; padding: 6px 10px; border: 1px solid var(--line2); border-radius: 8px;
+    background: var(--field); color: var(--dim); font-size: 13px; font-weight: 600;
+  }
+  .weight-dot { cursor: pointer; }
 
   /* login */
   #login { padding: 90px 24px; max-width: 360px; margin: 0 auto; }
@@ -482,6 +532,126 @@ function roleIcon(role) {
   return el;
 }
 
+/* Movement-family glyphs (Andrew, 2026-09-19). Ten families plus a fallback, drawn as
+   stick figures at 24x24 and rendered inline before the panel title at 24px in --dim.
+   These label the movement; ROLE_ICONS above label the PHASE inside it. Two different
+   questions, two different marks, and they sit in different places on purpose.
+
+   MATCH order is load-bearing and is copied verbatim from the approved mock:
+   the pulls are tested before either lift, and jerk before clean, so "Snatch pull" and
+   "Clean pull" land on the pull glyph and "Clean & jerk" lands on the jerk. Reordering
+   these rows silently re-labels those four exercises with no error anywhere. */
+const FAM_PATHS = {
+  squat: '<circle cx="12" cy="4.6" r="2" fill="currentColor" stroke="none"/><path d="M3.5 9h17"/><path d="M12 6.6v6.4"/><path d="M12 13l-4 2.6V20"/><path d="M12 13l4 2.6V20"/><path d="M4.7 6.8v4.4"/><path d="M19.3 6.8v4.4"/>',
+  row: '<circle cx="12" cy="10.6" r="1.9" fill="currentColor" stroke="none"/><path d="M3.5 3.6h17"/><path d="M10.4 13.4L9 9.2 8.2 4.4"/><path d="M13.6 13.4l1.4-4.2.8-4.8"/><path d="M12 12.6v4"/><path d="M12 16.6l3.6 1.6v2.2"/>',
+  floor: '<circle cx="12" cy="4" r="2" fill="currentColor" stroke="none"/><path d="M12 6v5.4"/><path d="M9.4 7.8h5.2"/><path d="M9.4 7.8v8.2"/><path d="M14.6 7.8v8.2"/><path d="M3.5 16.6h17"/><path d="M12 11.4l-1.8 8.4"/><path d="M12 11.4l1.8 8.4"/><path d="M4.7 14.4v4.4"/><path d="M19.3 14.4v4.4"/>',
+  jerk: '<circle cx="12" cy="7.8" r="1.9" fill="currentColor" stroke="none"/><path d="M3.5 3.4h17"/><path d="M9.6 10.6h4.8"/><path d="M9.6 10.6L9.2 4.2"/><path d="M14.4 10.6l.4-6.4"/><path d="M12 10.6v4"/><path d="M12 14.6l4.4 2.4V20.4"/><path d="M12 14.6L7.2 20"/><path d="M4.7 1.2v4.4"/><path d="M19.3 1.2v4.4"/>',
+  snatch: '<circle cx="12" cy="8.2" r="1.9" fill="currentColor" stroke="none"/><path d="M2.5 3.4h19"/><path d="M9.6 11h4.8"/><path d="M9.6 11L4.6 3.8"/><path d="M14.4 11l5-7.2"/><path d="M12 11v3.6"/><path d="M12 14.6l-4 1.8V20"/><path d="M12 14.6l4 1.8V20"/><path d="M3.7 1.2v4.4"/><path d="M20.3 1.2v4.4"/>',
+  clean: '<circle cx="12" cy="4" r="1.9" fill="currentColor" stroke="none"/><path d="M3.5 9.6h17"/><path d="M9.4 9.6L9.6 5.4"/><path d="M14.6 9.6l-.2-4.2"/><path d="M12 5.9v7.1"/><path d="M12 13l-3.6 2.6V20"/><path d="M12 13l3.6 2.6V20"/><path d="M4.7 7.4v4.4"/><path d="M19.3 7.4v4.4"/>',
+  overhead: '<circle cx="12" cy="7.8" r="1.9" fill="currentColor" stroke="none"/><path d="M3.5 3.6h17"/><path d="M9.4 10.6h5.2"/><path d="M9.4 10.6L9 4.2"/><path d="M14.6 10.6l.4-6.4"/><path d="M12 10.6v5.6"/><path d="M12 16.2l-2.4 4.4"/><path d="M12 16.2l2.4 4.4"/><path d="M4.7 1.4v4.4"/><path d="M19.3 1.4v4.4"/>',
+  press: '<circle cx="12" cy="4.2" r="1.9" fill="currentColor" stroke="none"/><path d="M2.6 10.6h18.8"/><path d="M4.3 8.4v4.4"/><path d="M19.7 8.4v4.4"/><path d="M12 6.1v7.4"/><path d="M12 8.4L7.4 10.6"/><path d="M12 8.4l4.6 2.2"/><path d="M12 13.5l-2.4 7.1"/><path d="M12 13.5l2.4 7.1"/>',
+  carry: '<circle cx="12" cy="4.4" r="2" fill="currentColor" stroke="none"/><path d="M12 6.4v7.2"/><path d="M8.4 9h7.2"/><path d="M8.4 9v4.6"/><path d="M15.6 9v4.6"/><rect x="6.6" y="13.6" width="3.6" height="5" rx=".9"/><rect x="13.8" y="13.6" width="3.6" height="5" rx=".9"/><path d="M11.5 13.6L10.6 20"/><path d="M12.5 13.6l.9 6.4"/>',
+  hang: '<circle cx="12" cy="7.6" r="1.9" fill="currentColor" stroke="none"/><path d="M3.5 3.6h17"/><path d="M9.8 9.2V4.2"/><path d="M14.2 9.2V4.2"/><path d="M12 9.6v4.8"/><path d="M12 14.4h5.4"/><path d="M17.4 14.4v4.6"/>',
+  other: '<circle cx="12" cy="4.6" r="2" fill="currentColor" stroke="none"/><path d="M12 6.6v7"/><path d="M8 9.6h8"/><path d="M12 13.6l-2.6 6.4"/><path d="M12 13.6l2.6 6.4"/>',
+};
+const MATCH = [
+  ["squat", /squat|lunge/i],
+  ["row", /row|pulldown|lat\b/i],
+  // "Snatch pull" and "Clean pull" are pulls, not catches — tested before either lift.
+  ["floor", /\bpull\b|deadlift|rdl/i],
+  // "Clean & jerk" is the jerk: it is the half of the lift the glyph can show.
+  ["jerk", /jerk/i],
+  ["snatch", /snatch/i],
+  ["clean", /clean/i],
+  ["overhead", /overhead|shoulder press|\bohp\b/i],
+  ["press", /press|bench|\bdip\b|push-?up/i],
+  ["carry", /carry|farmer|suitcase|\bhold\b/i],
+  ["hang", /hang|crunch|raise|plank|\bcore\b/i],
+];
+const famOf = (name) => (MATCH.find(([, re]) => re.test(name || "")) || ["other"])[0];
+function famGlyph(name) {
+  const el = document.createElement("span");
+  el.className = "fam";
+  // innerHTML, not h(): SVG children need createElementNS and h() is createElement-only.
+  el.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+    stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${FAM_PATHS[famOf(name)]}</svg>`;
+  return el;
+}
+
+/* Rest clock (Andrew, 2026-09-19). Counts up from the last tick and resets on the next
+   one; absent until the first tick of the day, because before that there is no rest to
+   measure. No alarm on purpose — it reports, it does not nag. `restDay` scopes it to the
+   session being viewed, so switching days hides a clock that is no longer about anything. */
+let restFrom = null, restDay = null;
+function paintRest() {
+  const el = document.getElementById("rest");
+  if (!el) return;
+  if (!restFrom || restDay !== state.day) { el.classList.add("hide"); return; }
+  const secs = Math.max(0, Math.floor((Date.now() - restFrom) / 1000));
+  el.classList.remove("hide");
+  el.replaceChildren(h("span", null, "Rest"),
+    document.createTextNode(`${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`));
+}
+setInterval(paintRest, 1000);
+
+/* Steppers replace the free-text set fields. `null` means "as planned": the planned value
+   shows greyed and setRow's `?? planned` writes it, which is what a blank field already
+   did (index.html, setRow) — so clearing a field restores the plan rather than logging
+   an empty load. An empty string would NOT do that: `"" ?? x` is `""`, not the plan. */
+const lastNum = (v) => {
+  const m = String(v ?? "").match(/\d+(?:\.\d+)?/g);
+  return m ? Number(m[m.length - 1]) : 0;
+};
+function stepper(kind, planned, get, set) {
+  const step = kind === "wt" ? 5 : 1;
+  const unit = kind === "wt" ? "lb" : "";
+  // A planned load can still be a range ("135-205"); step from its top, the working target.
+  const plan = String(planned ?? "").replace(/\s*lb$/i, "");
+  const isSet = (v) => v !== undefined && v !== null && v !== "";
+  const wrap = h("div", { class: "field step" + (kind === "wt" ? " wt" : "") });
+  const val = h("button", { type: "button", class: "val", onclick: () => edit() });
+  /* The nudge buttons are built ONCE and read the draft at click time. Rebuilding them on
+     every paint would hand each new button a captured value, and a tap landing on a node
+     built before the last write would step from a stale base — a wrong load, no error. */
+  const nudge = (delta) => h("button", { type: "button", class: "nudge",
+    "aria-label": `${delta < 0 ? "minus" : "plus"} ${step} ${unit || "reps"}`,
+    onclick: () => {
+      const cur = get();
+      const base = lastNum(isSet(cur) ? cur : plan);
+      set(String(Math.max(0, Math.round((base + delta) * 10) / 10)));
+      paint();
+    } }, delta < 0 ? "−" : "+");
+  const minus = nudge(-step), plus = nudge(step);
+  const paint = () => {
+    const cur = get(), edited = isSet(cur);
+    wrap.classList.toggle("edited", edited);
+    val.className = "val" + (edited ? "" : " plan");
+    val.setAttribute("aria-label",
+      `${edited ? cur : plan || "not set"} ${unit || "reps"} — tap to type an exact value`);
+    val.replaceChildren(document.createTextNode(String(edited ? cur : plan) || "—"));
+    if (unit) val.append(h("em", null, unit));
+  };
+  const edit = () => {
+    const input = h("input", { inputmode: "decimal", placeholder: plan, value: get() ?? "" });
+    let closed = false;
+    // change and blur both fire on commit; the guard keeps the second one a no-op.
+    const commit = () => {
+      if (closed) return; closed = true;
+      const v = input.value.trim();
+      set(v === "" ? null : v);
+      wrap.replaceChildren(minus, val, plus);
+      paint();
+    };
+    input.addEventListener("change", commit);
+    input.addEventListener("blur", commit);
+    wrap.replaceChildren(...[input, unit ? h("span", null, unit) : null].filter(Boolean));
+    input.focus(); input.select();
+  };
+  wrap.replaceChildren(minus, val, plus);
+  paint();
+  return wrap;
+}
+
 function pickDefault() {
   const weeks = Object.keys(PROGRAM.weeks);
   const todayISO = localDate();
@@ -520,7 +690,7 @@ function icon(name) {
 }
 const shortDate = (iso) => new Date(`${iso}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
-function weightChart(shown) {
+function weightChart(shown, pickedId, onPick) {
   const W = 320, H = 170, L = 34, R = 8, T = 8, B = 22;
   const svg = svgEl("svg", { class: "weight-chart", viewBox: `0 0 ${W} ${H}` });
   if (!shown.length) {
@@ -552,7 +722,18 @@ function weightChart(shown) {
     svg.append(svgEl("polyline", { points: avg, fill: "none", stroke: "#F2655A", "stroke-width": 7, opacity: .18, "stroke-linejoin": "round", "stroke-linecap": "round" }));
     svg.append(svgEl("polyline", { points: avg, fill: "none", stroke: "#F2655A", "stroke-width": 2.5, "stroke-linejoin": "round", "stroke-linecap": "round" }));
   }
-  shown.forEach((row, i) => svg.append(svgEl("circle", { cx: x(t[i]), cy: y(vals[i]), r: 3.2, fill: "#F2655A", opacity: .6 })));
+  /* The dots ARE the recent list (Andrew, 09-19): tapping one loads that weigh-in into the
+     form below, which is why the separate Recent section is gone. The visible dot stays
+     small; an invisible disc over it carries the touch, because 3px is not a thumb target. */
+  shown.forEach((row, i) => {
+    const picked = pickedId && row.id === pickedId;
+    svg.append(svgEl("circle", { cx: x(t[i]), cy: y(vals[i]),
+      r: picked ? 5.4 : 3.2, fill: "#F2655A", opacity: picked ? 1 : .6 }));
+    if (!onPick) return;
+    const hit = svgEl("circle", { cx: x(t[i]), cy: y(vals[i]), r: 14, fill: "transparent", class: "weight-dot" });
+    hit.addEventListener("click", () => onPick(row));
+    svg.append(hit);
+  });
   return svg;
 }
 
@@ -570,15 +751,8 @@ function renderWeight(main) {
   const range = state.weightRange || 30;
   const rows = activeWeights().sort((a, b) => Date.parse(a.logged_at) - Date.parse(b.logged_at));
   const shown = range === "all" ? rows : rows.filter((row) => row.local_date >= calendarWindow(range)[0]);
-  main.append(h("section", { class: "wcard" },
-    h("p", { class: "eyebrow" }, "7-day average"),
-    enough ? h("p", { class: "big" }, current.value.toFixed(1), h("small", null, "lb"))
-           : h("p", { class: "big need" }, `Need 3 weigh-ins this week (${current.rows.length} so far)`),
-    diff === null ? null : h("p", { class: "delta" }, `${diff >= 0 ? "+" : ""}${diff.toFixed(1)} lb vs last week`),
-    weightChart(shown),
-    h("div", { class: "range" }, [30, 90, "all"].map((value) => h("button", {
-      class: value === range ? "active" : "", onclick: () => { state.weightRange = value; render(); },
-    }, value === "all" ? "All" : `${value}d`)))));
+  const when = (row) => new Date(row.logged_at).toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  const tags = (row) => [row.fasted === true ? "fasted" : row.fasted === false ? "fed" : null, row.training ? `${row.training} training` : null].filter(Boolean).join(" · ");
 
   const input = h("input", { type: "number", min: "80", max: "400", step: ".1", inputmode: "decimal", placeholder: "000.0", value: f.weight_lb });
   const logged = h("input", { class: "weight-time", type: "datetime-local", value: f.logged_at });
@@ -586,8 +760,34 @@ function renderWeight(main) {
     class: "chip" + (f[key] === value ? " active" : ""),
     onclick: () => { f.weight_lb = input.value; f.logged_at = logged.value; f[key] = f[key] === value ? null : value; render(); },
   }, label);
-  main.append(h("section", { class: "wcard" + (f.id ? " editing" : "") },
-    h("h2", null, "Log weight"),
+
+  const picked = f.id ? activeWeights().find((row) => row.id === f.id) : null;
+
+  /* One card, not three (Andrew, 09-19). The average, the chart and the entry row are one
+     continuous thing separated by hairlines; the entry row is always visible, with no
+     toggle, because logging a weight is the only reason this tab gets opened. */
+  main.append(h("section", { class: "wcard" },
+    h("p", { class: "eyebrow" }, "7-day average"),
+    enough ? h("p", { class: "big" }, current.value.toFixed(1), h("small", null, "lb"))
+           : h("p", { class: "big need" }, `Need 3 weigh-ins this week (${current.rows.length} so far)`),
+    diff === null ? null : h("p", { class: "delta" }, `${diff >= 0 ? "+" : ""}${diff.toFixed(1)} lb vs last week`),
+    weightChart(shown, f.id, (row) => {
+      weightForm = { ...row, logged_at: localStamp(new Date(row.logged_at)) };
+      render();
+    }),
+    h("div", { class: "range" }, [30, 90, "all"].map((value) => h("button", {
+      class: value === range ? "active" : "", onclick: () => { state.weightRange = value; render(); },
+    }, value === "all" ? "All" : `${value}d`))),
+    // The one line that names the picked dot, and the only place a weigh-in can be deleted.
+    picked ? h("div", { class: "picked" },
+      h("b", null, `${Number(picked.weight_lb).toFixed(1)} lb`),
+      document.createTextNode(`· ${when(picked)}${tags(picked) ? ` · ${tags(picked)}` : ""}`),
+      h("button", { onclick: () => {
+        if (!confirm(`Delete ${Number(picked.weight_lb).toFixed(1)} lb from ${when(picked)}?`)) return;
+        const deleted = { ...picked, deleted: true, ts: new Date().toISOString() };
+        mergeWeights([deleted]); enqueue("body_weights", deleted); weightForm = newWeightForm(); render();
+      } }, "Delete")) : null,
+    h("div", { class: "hair-lbl" }, h("p", { class: "eyebrow" }, f.id ? "Edit weigh-in" : "Log weight")),
     h("div", { class: "wfield" }, input, h("span", null, "lb")),
     logged,
     h("div", { class: "chips" },
@@ -598,22 +798,8 @@ function renderWeight(main) {
       if (!Number.isFinite(Number(f.weight_lb)) || Number(f.weight_lb) < 80 || Number(f.weight_lb) > 400 || !f.logged_at) { input.focus(); return; }
       const row = weightRow(f); mergeWeights([row]); enqueue("body_weights", row); weightForm = newWeightForm(); render();
     } }, f.id ? "Save changes" : "Save"),
-    f.id ? h("button", { class: "range", style: "width:100%;background:none;border:0;color:var(--dim);font-size:15px;padding:10px 0 0",
+    f.id ? h("button", { style: "width:100%;background:none;border:0;color:var(--dim);font-size:15px;padding:10px 0 0",
       onclick: () => { weightForm = newWeightForm(); render(); } }, "Cancel edit") : null));
-
-  const recent = activeWeights().sort((a, b) => b.logged_at.localeCompare(a.logged_at)).slice(0, 5);
-  const when = (row) => new Date(row.logged_at).toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-  const tags = (row) => [row.fasted === true ? "fasted" : row.fasted === false ? "fed" : null, row.training ? `${row.training} training` : null].filter(Boolean).join(" · ");
-  main.append(h("section", { class: "recent" }, h("h3", null, "Recent"),
-    recent.length ? recent.map((row) => h("div", { class: "weight-entry" },
-      h("strong", null, Number(row.weight_lb).toFixed(1)),
-      h("span", null, when(row), tags(row) ? h("br") : null, tags(row)),
-      h("button", { onclick: () => { weightForm = { ...row, logged_at: localStamp(new Date(row.logged_at)) }; render(); window.scrollTo(0, 0); } }, "Edit"),
-      h("button", { onclick: () => {
-        if (!confirm(`Delete ${Number(row.weight_lb).toFixed(1)} lb from ${when(row)}?`)) return;
-        const deleted = { ...row, deleted: true, ts: new Date().toISOString() }; mergeWeights([deleted]); enqueue("body_weights", deleted); render();
-      } }, "Delete")))
-    : h("p", { class: "weight-sub" }, "No weigh-ins yet.")));
 }
 
 function tabbar(isWeight) {
@@ -633,10 +819,12 @@ function render() {
   const isWeight = state.tab === "weight";
 
   app.append(
-    h("header", null, h("h1", { class: "wordmark" }, "LIFTOS"), h("span", { id: "sync" })),
+    h("header", null, h("h1", { class: "wordmark" }, "LIFTOS"),
+      h("span", { id: "rest", class: "hide" }), h("span", { id: "sync" })),
     h("main", { id: "main" }),
     tabbar(isWeight));
   const main = document.getElementById("main");
+  paintRest();
   if (isWeight) { renderWeight(main); syncStatus(); return; }
 
   const day = wk.days[state.day];
@@ -692,10 +880,29 @@ function render() {
     }, noteSt.body || "");
     const more = h("button", { class: "more" + (noteSt.body ? " on" : ""), "aria-label": "Exercise note",
       onclick: () => { ta.classList.toggle("hide"); if (!ta.classList.contains("hide")) ta.focus(); } }, "＋ note");
+    /* A miss opens THIS panel's note rather than adding a row of its own: a missed set is
+       the one thing you want to say something about, and the note already exists. Amber
+       matches the tick, and the label names which set so the body does not have to. */
+    const missLbl = h("span", { class: "miss-note-lbl hide" });
+    const missedSets = () => panel.items
+      .flatMap(({ ex, ei }) => ex.sets.map((_, si) => ({ ex, ei, si })))
+      .filter(({ ei, si }) => (draft[setKey(state.week, state.day, ei, si)] || {}).result === "missed");
+    const paintMiss = (focus) => {
+      const missed = missedSets();
+      ta.classList.toggle("miss-note", missed.length > 0);
+      missLbl.classList.toggle("hide", missed.length === 0);
+      if (missed.length) {
+        missLbl.textContent = `Missed — ${missed.map(({ ex, si }) => `set ${si + 1} ${ex.name}`).join(" · ")}`;
+        ta.classList.remove("hide");
+        if (focus) ta.focus();
+      } else if (!(draft[noteId] || {}).body) {
+        ta.classList.add("hide");
+      }
+    };
     main.append(h("section", { class: "ex" },
       h("div", { class: "ex-head" },
         h("div", { class: "ex-num" }, String(pi + 1).padStart(2, "0")),
-        h("div", { class: "ex-title" }, h("h2", null, panel.group),
+        h("div", { class: "ex-title" }, h("h2", null, famGlyph(panel.group), panel.group),
           panel.items.length === 1
             ? h("div", { class: "rx" }, panel.items[0].ex.prescription)
             : null),
@@ -731,22 +938,27 @@ function render() {
             saveDraft(id, { result: next });
             enqueue("lift_sets", setRow(state.week, state.day, ei, si));
             paint(next);
+            // A tick is the only event that marks the end of a set, so it owns the clock.
+            restFrom = Date.now(); restDay = state.day; paintRest();
+            /* Capability-checked: iOS Safari does not implement navigator.vibrate at all,
+               so this is expected to be a no-op on the phone this app actually runs on. */
+            if (navigator.vibrate) { try { navigator.vibrate(12); } catch (e) {} }
+            paintMiss(next === "missed");
           };
           const row = h("div", { class: "set" },
             tick,
             h("span", { class: "lbl" }, `Set ${si + 1}`),
-            h("label", { class: "field wt" },
-              h("input", { inputmode: "decimal", placeholder: String(s.weight || "").replace(/\s*lb$/i, ""), value: st.weight ?? "",
-                onchange: (e) => { saveDraft(id, { weight: e.target.value }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); } }),
-              h("span", null, "lb")),
-            h("label", { class: "field" },
-              h("input", { inputmode: "numeric", placeholder: s.reps || "", value: st.reps ?? "",
-                onchange: (e) => { saveDraft(id, { reps: e.target.value }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); } }),
-              h("span", null, "reps")));
+            stepper("wt", s.weight,
+              () => (draft[id] || {}).weight,
+              (v) => { saveDraft(id, { weight: v }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); }),
+            stepper("reps", s.reps,
+              () => (draft[id] || {}).reps,
+              (v) => { saveDraft(id, { reps: v }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); }));
           paint(st.result || null);
           return row;
         })))),
-      ta));
+      missLbl, ta));
+    paintMiss(false);
   });
 
   const snId = noteKey(state.week, state.day);
@@ -772,7 +984,7 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "liftos-ramp-rungs";
+const BUILD = "liftos-glyphs-steppers";
 
 /* One-time: retire pre-meso-prefix draft keys ("w1-Mon-e0-s0", "note-w1-Mon").
    They belong to Meso 1 and would otherwise render as this meso's ticks/loads

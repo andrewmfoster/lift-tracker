@@ -49,17 +49,6 @@
   #sync.ok::before { background: var(--coral); box-shadow: var(--glow); }
   #sync.pending { color: var(--warn); border-color: rgba(227, 166, 74, .5); }
   #sync.pending::before { background: var(--warn); }
-  /* Rest clock. Counts up from the last tick; no alarm, it reports rather than nags. */
-  #rest {
-    margin-left: auto; display: inline-flex; align-items: center; gap: 8px;
-    padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line2);
-    font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--text); font-variant-numeric: tabular-nums;
-  }
-  #rest span { color: var(--dim); }
-  #rest + #sync { margin-left: 0; }
-  #rest.hide { display: none; }
-  #rest.hide + #sync { margin-left: auto; }
 
   /* meso / week / session line */
   #weekbar { display: flex; align-items: center; gap: 12px; padding: 8px 18px 12px; color: var(--dim); }
@@ -596,21 +585,9 @@ function famGlyph(name) {
   return el;
 }
 
-/* Rest clock (Andrew, 2026-09-19). Counts up from the last tick and resets on the next
-   one; absent until the first tick of the day, because before that there is no rest to
-   measure. No alarm on purpose — it reports, it does not nag. `restDay` scopes it to the
-   session being viewed, so switching days hides a clock that is no longer about anything. */
-let restFrom = null, restDay = null;
-function paintRest() {
-  const el = document.getElementById("rest");
-  if (!el) return;
-  if (!restFrom || restDay !== state.day) { el.classList.add("hide"); return; }
-  const secs = Math.max(0, Math.floor((Date.now() - restFrom) / 1000));
-  el.classList.remove("hide");
-  el.replaceChildren(h("span", null, "Rest"),
-    document.createTextNode(`${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`));
-}
-setInterval(paintRest, 1000);
+/* No rest clock (Andrew, 2026-09-21; added 09-19, removed two sessions later): he never
+   looked at it, and it kept counting after the last set of the day because a tick has
+   no way to know it was the final one. */
 
 /* Steppers replace the free-text set fields. `null` means "as planned": the planned value
    shows greyed and setRow's `?? planned` writes it, which is what a blank field already
@@ -858,11 +835,10 @@ function render() {
 
   app.append(
     h("header", null, h("h1", { class: "wordmark" }, "LIFTOS"),
-      h("span", { id: "rest", class: "hide" }), h("span", { id: "sync" })),
+      h("span", { id: "sync" })),
     h("main", { id: "main" }),
     tabbar(isWeight));
   const main = document.getElementById("main");
-  paintRest();
   if (isWeight) { renderWeight(main); syncStatus(); return; }
 
   const day = wk.days[state.day];
@@ -997,8 +973,6 @@ function render() {
             enqueue("lift_sets", setRow(state.week, state.day, ei, si));
             paint(next);
             row.querySelectorAll(".field.step").forEach((f) => f.dispatchEvent(new Event("repaint")));
-            // A tick is the only event that marks the end of a set, so it owns the clock.
-            restFrom = Date.now(); restDay = state.day; paintRest();
             /* Capability-checked: iOS Safari does not implement navigator.vibrate at all,
                so this is expected to be a no-op on the phone this app actually runs on. */
             if (navigator.vibrate) { try { navigator.vibrate(12); } catch (e) {} }
@@ -1049,7 +1023,7 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "liftos-tick-snaps-plan";
+const BUILD = "liftos-no-rest-clock";
 
 /* One-time: retire pre-meso-prefix draft keys ("w1-Mon-e0-s0", "note-w1-Mon").
    They belong to Meso 1 and would otherwise render as this meso's ticks/loads

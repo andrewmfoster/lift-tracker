@@ -620,22 +620,24 @@ const lastNum = (v) => {
   const m = String(v ?? "").match(/\d+(?:\.\d+)?/g);
   return m ? Number(m[m.length - 1]) : 0;
 };
+// low end of a range ("8-10" -> 8); a single value is its own low end.
+const firstNum = (v) => {
+  const m = String(v ?? "").match(/\d+(?:\.\d+)?/g);
+  return m ? Number(m[0]) : 0;
+};
+const isSetVal = (v) => v !== undefined && v !== null && v !== "";
 function stepper(kind, planned, get, set) {
   const step = kind === "wt" ? 5 : 1;
   const unit = kind === "wt" ? "lb" : "";
   // A planned load can still be a range ("135-205"); step from its top, the working target.
   const plan = String(planned ?? "").replace(/\s*lb$/i, "");
   const isSet = (v) => v !== undefined && v !== null && v !== "";
-  /* An exact planned value is not an override. This matters when a lifter opens an
-     exact-entry field and leaves it alone: keeping "115" in draft made the row look
-     permanently edited even though it still matched the program. */
-  const sameAsPlan = (v) => {
-    const clean = (x) => String(x ?? "").trim().replace(/\s*lb$/i, "").trim();
-    const a = clean(v), b = clean(plan);
-    if (a === b) return true;
-    return a !== "" && b !== "" && Number.isFinite(Number(a)) && Number(a) === Number(b);
-  };
-  const persist = (v) => set(!isSet(v) || sameAsPlan(v) ? null : v);
+  /* Orange means "the value I took", gray "not taken yet" (Andrew, 09-21). Until then
+     orange meant "differs from the program" and an exact planned value was dropped back
+     to gray on commit; that left a finished session reading as mostly unlogged, since
+     most sets are lifted at the prescribed load. A typed value now sticks, plan or not,
+     and a tick on an untouched row snaps the plan in (see tick.onclick). */
+  const persist = (v) => set(!isSet(v) ? null : v);
   const wrap = h("div", { class: "field step" + (kind === "wt" ? " wt" : "") });
   const val = h("button", { type: "button", class: "val", onclick: () => edit() });
   /* The nudge buttons are built ONCE and read the draft at click time. Rebuilding them on
@@ -651,7 +653,7 @@ function stepper(kind, planned, get, set) {
     } }, delta < 0 ? "−" : "+");
   const minus = nudge(-step), plus = nudge(step);
   const paint = () => {
-    const cur = get(), edited = isSet(cur) && !sameAsPlan(cur);
+    const cur = get(), edited = isSet(cur);
     wrap.classList.toggle("edited", edited);
     val.className = "val" + (edited ? "" : " plan");
     val.setAttribute("aria-label",
@@ -683,6 +685,7 @@ function stepper(kind, planned, get, set) {
     input.focus(); input.select();
   };
   wrap.replaceChildren(minus, val, plus);
+  wrap.addEventListener("repaint", paint);
   paint();
   return wrap;
 }
@@ -970,11 +973,30 @@ function render() {
             tick.setAttribute("aria-pressed", String(!!res));
           };
           tick.onclick = () => {
-            const cur = (draft[id] || {}).result || null;
+            const st0 = draft[id] || {};
+            const cur = st0.result || null;
             const next = cur === null ? "made" : cur === "made" ? "missed" : null;
-            saveDraft(id, { result: next });
+            /* A tick on an untouched field means "I took the plan": the planned weight
+               and the LOW end of a rep range snap in as chosen values, so the row goes
+               orange and Supabase gets the number lifted, not the literal "8-10".
+               `snapped` remembers which fields were filled this way so cycling back to
+               "not logged" clears them and leaves typed values alone. */
+            const patch = { result: next };
+            if (next === "made") {
+              const snapped = [];
+              if (!isSetVal(st0.weight) && isSetVal(s.weight)) {
+                patch.weight = String(lastNum(s.weight)); snapped.push("weight"); }
+              if (!isSetVal(st0.reps) && isSetVal(s.reps)) {
+                patch.reps = String(firstNum(s.reps)); snapped.push("reps"); }
+              if (snapped.length) patch.snapped = snapped;
+            } else if (next === null && Array.isArray(st0.snapped)) {
+              for (const k of st0.snapped) patch[k] = null;
+              patch.snapped = null;
+            }
+            saveDraft(id, patch);
             enqueue("lift_sets", setRow(state.week, state.day, ei, si));
             paint(next);
+            row.querySelectorAll(".field.step").forEach((f) => f.dispatchEvent(new Event("repaint")));
             // A tick is the only event that marks the end of a set, so it owns the clock.
             restFrom = Date.now(); restDay = state.day; paintRest();
             /* Capability-checked: iOS Safari does not implement navigator.vibrate at all,
@@ -1027,7 +1049,7 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "liftos-masts-complete";
+const BUILD = "liftos-tick-snaps-plan";
 
 /* One-time: retire pre-meso-prefix draft keys ("w1-Mon-e0-s0", "note-w1-Mon").
    They belong to Meso 1 and would otherwise render as this meso's ticks/loads

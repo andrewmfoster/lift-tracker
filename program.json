@@ -1179,6 +1179,598 @@
           ]
         }
       }
+    },
+    "3": {
+      "start": "2026-10-05",
+      "days": {
+        "Mon": {
+          "date": "2026-10-05",
+          "session": "A",
+          "exercises": [
+            {
+              "name": "Snatch — ramp",
+              "group": "Snatch",
+              "prescription": "3×2 — ramp 115–135 lb (115 / 115 / 135)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "115 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "115 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135 lb"
+                }
+              ],
+              "role": "ramp"
+            },
+            {
+              "name": "Snatch — technique",
+              "group": "Snatch",
+              "prescription": "4×2 — 155 lb — crisp only",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "155 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "155 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "155 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "155 lb"
+                }
+              ],
+              "role": "technique",
+              "cue": "crisp only"
+            },
+            {
+              "name": "Snatch — crisp singles",
+              "group": "Snatch",
+              "prescription": "2×1 — 170 lb — top of the band, slot ends on the first speed dip",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "170 lb"
+                },
+                {
+                  "reps": "1",
+                  "weight": "170 lb"
+                }
+              ],
+              "role": "crisp singles",
+              "cue": "top of the band, slot ends on the first speed dip"
+            },
+            {
+              "name": "Snatch pull",
+              "group": "Snatch pull",
+              "prescription": "3×3 — 225 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "225 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "225 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "225 lb"
+                }
+              ]
+            },
+            {
+              "name": "Back squat — warmup ramp",
+              "group": "Back squat",
+              "prescription": "2×3 — ramp 135–185 lb (135 / 185)",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "135 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "185 lb"
+                }
+              ],
+              "role": "warmup ramp"
+            },
+            {
+              "name": "Back squat (medium)",
+              "group": "Back squat",
+              "prescription": "3 × 8–10 — 205 lb — 3 s eccentric, RIR 2",
+              "sets": [
+                {
+                  "reps": "8-10",
+                  "weight": "205 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "205 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "205 lb"
+                }
+              ],
+              "role": "medium",
+              "cue": "3 s eccentric, RIR 2"
+            },
+            {
+              "name": "Weighted pushup",
+              "group": "Weighted pushup",
+              "prescription": "4 × 10–12 — 45 lb plate on the back — 3 s ecc, RIR 2",
+              "sets": [
+                {
+                  "reps": "10-12",
+                  "weight": "45 lb"
+                },
+                {
+                  "reps": "10-12",
+                  "weight": "45 lb"
+                },
+                {
+                  "reps": "10-12",
+                  "weight": "45 lb"
+                },
+                {
+                  "reps": "10-12",
+                  "weight": "45 lb"
+                }
+              ],
+              "cue": "3 s ecc, RIR 2"
+            },
+            {
+              "name": "Cable row",
+              "group": "Cable row",
+              "prescription": "2 × 10–12 — 75 lb — 3 s ecc",
+              "sets": [
+                {
+                  "reps": "10-12",
+                  "weight": "75 lb"
+                },
+                {
+                  "reps": "10-12",
+                  "weight": "75 lb"
+                }
+              ],
+              "cue": "3 s ecc"
+            },
+            {
+              "name": "Plate-loaded pulldown",
+              "group": "Plate-loaded pulldown",
+              "prescription": "3 × 8–10 — 110 lb — 3 s ecc",
+              "sets": [
+                {
+                  "reps": "8-10",
+                  "weight": "110 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "110 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "110 lb"
+                }
+              ],
+              "cue": "3 s ecc"
+            },
+            {
+              "name": "Hanging knee raise",
+              "group": "Hanging knee raise",
+              "prescription": "2 × 12",
+              "sets": [
+                {
+                  "reps": "12",
+                  "weight": ""
+                },
+                {
+                  "reps": "12",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        },
+        "Wed": {
+          "date": "2026-10-07",
+          "session": "B",
+          "exercises": [
+            {
+              "name": "Clean & jerk — ramp",
+              "group": "Clean & jerk",
+              "prescription": "3×2 — ramp 135–185 lb (135 / 185 / 185)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "135 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "185 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "185 lb"
+                }
+              ],
+              "role": "ramp"
+            },
+            {
+              "name": "Clean & jerk — technique",
+              "group": "Clean & jerk",
+              "prescription": "4×2 — 205 lb — crisp only",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "205 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "205 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "205 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "205 lb"
+                }
+              ],
+              "role": "technique",
+              "cue": "crisp only"
+            },
+            {
+              "name": "Clean & jerk — crisp singles",
+              "group": "Clean & jerk",
+              "prescription": "2×1 — 215 lb — top of the band, hang clean + jerk is fine here",
+              "sets": [
+                {
+                  "reps": "1",
+                  "weight": "215 lb"
+                },
+                {
+                  "reps": "1",
+                  "weight": "215 lb"
+                }
+              ],
+              "role": "crisp singles",
+              "cue": "top of the band, hang clean + jerk is fine here"
+            },
+            {
+              "name": "Front squat — warmup ramp",
+              "group": "Front squat",
+              "prescription": "2×3 — ramp 135–145 lb (135 / 145)",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "135 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "145 lb"
+                }
+              ],
+              "role": "warmup ramp"
+            },
+            {
+              "name": "Front squat (light)",
+              "group": "Front squat",
+              "prescription": "3 × 6–8 — 170 lb — 2–3 s pause in the hole, RIR 2–3",
+              "sets": [
+                {
+                  "reps": "6-8",
+                  "weight": "170 lb"
+                },
+                {
+                  "reps": "6-8",
+                  "weight": "170 lb"
+                },
+                {
+                  "reps": "6-8",
+                  "weight": "170 lb"
+                }
+              ],
+              "role": "light",
+              "cue": "2–3 s pause in the hole, RIR 2–3"
+            },
+            {
+              "name": "Unilateral machine shoulder press",
+              "group": "Unilateral machine shoulder press",
+              "prescription": "3 × 8–10 — 115 lb — 3 s ecc",
+              "sets": [
+                {
+                  "reps": "8-10",
+                  "weight": "115 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "115 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "115 lb"
+                }
+              ],
+              "cue": "3 s ecc"
+            },
+            {
+              "name": "Incline machine press",
+              "group": "Incline machine press",
+              "prescription": "3 × 8–10 — 115 lb — 3 s ecc",
+              "sets": [
+                {
+                  "reps": "8-10",
+                  "weight": "115 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "115 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "115 lb"
+                }
+              ],
+              "cue": "3 s ecc"
+            },
+            {
+              "name": "Cable row",
+              "group": "Cable row",
+              "prescription": "2 × 10–12 — 75 lb — 3 s ecc",
+              "sets": [
+                {
+                  "reps": "10-12",
+                  "weight": "75 lb"
+                },
+                {
+                  "reps": "10-12",
+                  "weight": "75 lb"
+                }
+              ],
+              "cue": "3 s ecc"
+            },
+            {
+              "name": "Cable crunch",
+              "group": "Cable crunch",
+              "prescription": "2 × 12 — 75 lb",
+              "sets": [
+                {
+                  "reps": "12",
+                  "weight": "75 lb"
+                },
+                {
+                  "reps": "12",
+                  "weight": "75 lb"
+                }
+              ]
+            },
+            {
+              "name": "Farmer carry",
+              "group": "Farmer carry",
+              "prescription": "3 × 40 m — 55 lb/hand",
+              "sets": [
+                {
+                  "reps": "40",
+                  "weight": "55 lb"
+                },
+                {
+                  "reps": "40",
+                  "weight": "55 lb"
+                },
+                {
+                  "reps": "40",
+                  "weight": "55 lb"
+                }
+              ]
+            }
+          ]
+        },
+        "Fri": {
+          "date": "2026-10-09",
+          "session": "C",
+          "exercises": [
+            {
+              "name": "Snatch balance",
+              "group": "Snatch balance",
+              "prescription": "4×2 — 125 lb (~59%) — slot ends on the first slow drop under",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "125 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "125 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "125 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "125 lb"
+                }
+              ],
+              "cue": "slot ends on the first slow drop under"
+            },
+            {
+              "name": "Tall jerk",
+              "group": "Tall jerk",
+              "prescription": "4×2 — 145 lb (~54%) — no dip, slot ends on the first slow punch under",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "145 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "145 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "145 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "145 lb"
+                }
+              ],
+              "cue": "no dip, slot ends on the first slow punch under"
+            },
+            {
+              "name": "Back squat — warmup ramp",
+              "group": "Back squat",
+              "prescription": "2×3 — ramp 170–195 lb (170 / 195)",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "170 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "195 lb"
+                }
+              ],
+              "role": "warmup ramp"
+            },
+            {
+              "name": "Back squat (heavy)",
+              "group": "Back squat",
+              "prescription": "4 × 5–6 — 250 lb — RIR 2, no added tempo",
+              "sets": [
+                {
+                  "reps": "5-6",
+                  "weight": "250 lb"
+                },
+                {
+                  "reps": "5-6",
+                  "weight": "250 lb"
+                },
+                {
+                  "reps": "5-6",
+                  "weight": "250 lb"
+                },
+                {
+                  "reps": "5-6",
+                  "weight": "250 lb"
+                }
+              ],
+              "role": "heavy",
+              "cue": "RIR 2, no added tempo"
+            },
+            {
+              "name": "Clean pull",
+              "group": "Clean pull",
+              "prescription": "3×3 — 285 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "285 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "285 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "285 lb"
+                }
+              ]
+            },
+            {
+              "name": "Unilateral machine chest press (2nd angle)",
+              "group": "Unilateral machine chest press",
+              "prescription": "4 × 8–10 — 100 lb — 3 s ecc",
+              "sets": [
+                {
+                  "reps": "8-10",
+                  "weight": "100 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "100 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "100 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "100 lb"
+                }
+              ],
+              "role": "2nd angle",
+              "cue": "3 s ecc"
+            },
+            {
+              "name": "Plate-loaded pulldown",
+              "group": "Plate-loaded pulldown",
+              "prescription": "3 × 8–10 — 110 lb — 3 s ecc",
+              "sets": [
+                {
+                  "reps": "8-10",
+                  "weight": "110 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "110 lb"
+                },
+                {
+                  "reps": "8-10",
+                  "weight": "110 lb"
+                }
+              ],
+              "cue": "3 s ecc"
+            },
+            {
+              "name": "Hanging leg raise",
+              "group": "Hanging leg raise",
+              "prescription": "3 × 12",
+              "sets": [
+                {
+                  "reps": "12",
+                  "weight": ""
+                },
+                {
+                  "reps": "12",
+                  "weight": ""
+                },
+                {
+                  "reps": "12",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "Dead hang",
+              "group": "Dead hang",
+              "prescription": "2 × 90 s",
+              "sets": [
+                {
+                  "reps": "90",
+                  "weight": ""
+                },
+                {
+                  "reps": "90",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        }
+      }
     }
   }
 }

@@ -2975,6 +2975,435 @@
           ]
         }
       }
+    },
+    "6": {
+      "start": "2026-10-26",
+      "days": {
+        "Mon": {
+          "date": "2026-10-26",
+          "session": "A",
+          "exercises": [
+            {
+              "name": "Snatch — ramp",
+              "group": "Snatch",
+              "prescription": "2×2 — ramp 115–135 lb (115 / 135)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "115 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "135 lb"
+                }
+              ],
+              "role": "ramp"
+            },
+            {
+              "name": "Snatch — technique",
+              "group": "Snatch",
+              "prescription": "3×2 — 145 lb — crisp only, bottom of the band",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "145 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "145 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "145 lb"
+                }
+              ],
+              "role": "technique",
+              "cue": "crisp only, bottom of the band"
+            },
+            {
+              "name": "Snatch pull",
+              "group": "Snatch pull",
+              "prescription": "2×3 — 185 lb — light",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "185 lb"
+                },
+                {
+                  "reps": "3",
+                  "weight": "185 lb"
+                }
+              ],
+              "cue": "light"
+            },
+            {
+              "name": "Back squat — warmup ramp",
+              "group": "Back squat",
+              "prescription": "1×3 — 135 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "135 lb"
+                }
+              ],
+              "role": "warmup ramp"
+            },
+            {
+              "name": "Back squat",
+              "group": "Back squat",
+              "prescription": "2×5 — 155 lb — no tempo, RIR 4+",
+              "sets": [
+                {
+                  "reps": "5",
+                  "weight": "155 lb"
+                },
+                {
+                  "reps": "5",
+                  "weight": "155 lb"
+                }
+              ],
+              "cue": "no tempo, RIR 4+"
+            },
+            {
+              "name": "Weighted pushup",
+              "group": "Weighted pushup",
+              "prescription": "2 × 10 — 25 lb plate on the back — RIR 4+",
+              "sets": [
+                {
+                  "reps": "10",
+                  "weight": "25 lb"
+                },
+                {
+                  "reps": "10",
+                  "weight": "25 lb"
+                }
+              ],
+              "cue": "RIR 4+"
+            },
+            {
+              "name": "Cable row",
+              "group": "Cable row",
+              "prescription": "1 × 10 — 65 lb — RIR 4+",
+              "sets": [
+                {
+                  "reps": "10",
+                  "weight": "65 lb"
+                }
+              ],
+              "cue": "RIR 4+"
+            },
+            {
+              "name": "Plate-loaded pulldown",
+              "group": "Plate-loaded pulldown",
+              "prescription": "2 × 8 — 100 lb — RIR 4+",
+              "sets": [
+                {
+                  "reps": "8",
+                  "weight": "100 lb"
+                },
+                {
+                  "reps": "8",
+                  "weight": "100 lb"
+                }
+              ],
+              "cue": "RIR 4+"
+            },
+            {
+              "name": "Hanging knee raise",
+              "group": "Hanging knee raise",
+              "prescription": "2 × 10",
+              "sets": [
+                {
+                  "reps": "10",
+                  "weight": ""
+                },
+                {
+                  "reps": "10",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        },
+        "Wed": {
+          "date": "2026-10-28",
+          "session": "B",
+          "exercises": [
+            {
+              "name": "Clean & jerk — ramp",
+              "group": "Clean & jerk",
+              "prescription": "2×2 — ramp 135–165 lb (135 / 165)",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "135 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "165 lb"
+                }
+              ],
+              "role": "ramp"
+            },
+            {
+              "name": "Clean & jerk — technique",
+              "group": "Clean & jerk",
+              "prescription": "3×2 — 185 lb — crisp only, bottom of the band",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "185 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "185 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "185 lb"
+                }
+              ],
+              "role": "technique",
+              "cue": "crisp only, bottom of the band"
+            },
+            {
+              "name": "Front squat — warmup ramp",
+              "group": "Front squat",
+              "prescription": "1×3 — 135 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "135 lb"
+                }
+              ],
+              "role": "warmup ramp"
+            },
+            {
+              "name": "Front squat",
+              "group": "Front squat",
+              "prescription": "2×5 — 145 lb — no pause, RIR 4+",
+              "sets": [
+                {
+                  "reps": "5",
+                  "weight": "145 lb"
+                },
+                {
+                  "reps": "5",
+                  "weight": "145 lb"
+                }
+              ],
+              "cue": "no pause, RIR 4+"
+            },
+            {
+              "name": "Unilateral machine shoulder press",
+              "group": "Unilateral machine shoulder press",
+              "prescription": "2 × 8 — 90 lb — RIR 4+",
+              "sets": [
+                {
+                  "reps": "8",
+                  "weight": "90 lb"
+                },
+                {
+                  "reps": "8",
+                  "weight": "90 lb"
+                }
+              ],
+              "cue": "RIR 4+"
+            },
+            {
+              "name": "Incline machine press",
+              "group": "Incline machine press",
+              "prescription": "2 × 8 — 100 lb — RIR 4+",
+              "sets": [
+                {
+                  "reps": "8",
+                  "weight": "100 lb"
+                },
+                {
+                  "reps": "8",
+                  "weight": "100 lb"
+                }
+              ],
+              "cue": "RIR 4+"
+            },
+            {
+              "name": "Cable row",
+              "group": "Cable row",
+              "prescription": "1 × 10 — 65 lb — RIR 4+",
+              "sets": [
+                {
+                  "reps": "10",
+                  "weight": "65 lb"
+                }
+              ],
+              "cue": "RIR 4+"
+            },
+            {
+              "name": "Cable crunch",
+              "group": "Cable crunch",
+              "prescription": "2 × 12 — 70 lb",
+              "sets": [
+                {
+                  "reps": "12",
+                  "weight": "70 lb"
+                },
+                {
+                  "reps": "12",
+                  "weight": "70 lb"
+                }
+              ]
+            },
+            {
+              "name": "Farmer carry",
+              "group": "Farmer carry",
+              "prescription": "2 × 40 m — 55 lb/hand",
+              "sets": [
+                {
+                  "reps": "40",
+                  "weight": "55 lb"
+                },
+                {
+                  "reps": "40",
+                  "weight": "55 lb"
+                }
+              ]
+            }
+          ]
+        },
+        "Fri": {
+          "date": "2026-10-30",
+          "session": "C",
+          "exercises": [
+            {
+              "name": "Power snatch",
+              "group": "Power snatch",
+              "prescription": "3×2 — 110 lb (~52%) — easy and fast",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "110 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "110 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "110 lb"
+                }
+              ],
+              "cue": "easy and fast"
+            },
+            {
+              "name": "Power clean",
+              "group": "Power clean",
+              "prescription": "3×2 — 145 lb (~54%) — easy and fast",
+              "sets": [
+                {
+                  "reps": "2",
+                  "weight": "145 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "145 lb"
+                },
+                {
+                  "reps": "2",
+                  "weight": "145 lb"
+                }
+              ],
+              "cue": "easy and fast"
+            },
+            {
+              "name": "Back squat — warmup ramp",
+              "group": "Back squat",
+              "prescription": "1×3 — 135 lb",
+              "sets": [
+                {
+                  "reps": "3",
+                  "weight": "135 lb"
+                }
+              ],
+              "role": "warmup ramp"
+            },
+            {
+              "name": "Back squat",
+              "group": "Back squat",
+              "prescription": "2×5 — 195 lb — no tempo, RIR 4+",
+              "sets": [
+                {
+                  "reps": "5",
+                  "weight": "195 lb"
+                },
+                {
+                  "reps": "5",
+                  "weight": "195 lb"
+                }
+              ],
+              "cue": "no tempo, RIR 4+"
+            },
+            {
+              "name": "Unilateral machine chest press (2nd angle)",
+              "group": "Unilateral machine chest press",
+              "prescription": "2 × 8 — 90 lb — RIR 4+",
+              "sets": [
+                {
+                  "reps": "8",
+                  "weight": "90 lb"
+                },
+                {
+                  "reps": "8",
+                  "weight": "90 lb"
+                }
+              ],
+              "role": "2nd angle",
+              "cue": "RIR 4+"
+            },
+            {
+              "name": "Plate-loaded pulldown",
+              "group": "Plate-loaded pulldown",
+              "prescription": "2 × 8 — 100 lb — RIR 4+",
+              "sets": [
+                {
+                  "reps": "8",
+                  "weight": "100 lb"
+                },
+                {
+                  "reps": "8",
+                  "weight": "100 lb"
+                }
+              ],
+              "cue": "RIR 4+"
+            },
+            {
+              "name": "Hanging leg raise",
+              "group": "Hanging leg raise",
+              "prescription": "2 × 10",
+              "sets": [
+                {
+                  "reps": "10",
+                  "weight": ""
+                },
+                {
+                  "reps": "10",
+                  "weight": ""
+                }
+              ]
+            },
+            {
+              "name": "Dead hang",
+              "group": "Dead hang",
+              "prescription": "1 × 60 s",
+              "sets": [
+                {
+                  "reps": "60",
+                  "weight": ""
+                }
+              ]
+            }
+          ]
+        }
+      }
     }
   }
 }

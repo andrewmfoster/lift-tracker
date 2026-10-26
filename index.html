@@ -189,8 +189,21 @@
     letter-spacing: .1em; text-transform: uppercase; margin: 10px 0 -2px;
   }
   .miss-note-lbl.hide { display: none; }
-  #sessionnote { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; margin: 4px 0 12px; }
-  #sessionnote h2 { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; margin: 0; }
+  #sessionnote, #recovery { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; margin: 4px 0 12px; }
+  #sessionnote h2, #recovery h2 { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; margin: 0; }
+  /* One-tap pick rows: RIR under a slot's last set, one row per muscle in the recovery card.
+     The buttons are the weight screen's range buttons, so neither adds a control style. */
+  .pick { display: flex; align-items: center; gap: 8px; }
+  .pick.hide { display: none; }
+  .pick-lbl {
+    flex: none; color: var(--dim); font-size: 11px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+  }
+  /* 62px = tick + gap + set number, so the RIR chips start under the set's fields */
+  .set + .pick { padding: 0 0 5px; }
+  .set + .pick .pick-lbl { width: 62px; }
+  #recovery .pick { margin-top: 10px; }
+  #recovery .pick-lbl { width: 84px; }
   #sessionnote h2 small { color: var(--dim); font-size: 13px; font-weight: 500; }
   .rest { text-align: center; color: var(--dim); padding: 60px 0; font-size: 16px; letter-spacing: .08em; text-transform: uppercase; }
 
@@ -226,11 +239,11 @@
   .weight-chart { width: 100%; height: auto; display: block; margin-top: 16px; }
   .weight-chart text { font: 500 11px var(--ui); fill: var(--dim); }
   .range { display: flex; gap: 8px; margin-top: 10px; }
-  .range button {
+  .range button, .pick button {
     flex: 1; padding: 8px 0; border-radius: 10px; border: 1px solid var(--line2); background: var(--field);
     color: var(--dim); font-size: 14px; font-weight: 600;
   }
-  .range button.active { color: var(--coral); border-color: var(--coral); background: var(--coral-soft); }
+  .range button.active, .pick button.active { color: var(--coral); border-color: var(--coral); background: var(--coral-soft); }
   .wfield { display: flex; align-items: center; border: 1px solid var(--line2); border-radius: 14px; background: var(--field); }
   .wfield input {
     flex: 1; min-width: 0; border: 0; background: none; outline: none; padding: 12px 18px;
@@ -364,7 +377,9 @@ async function pullLog() {
       if (!r.ok) throw new Error(`${table}: ${r.status}`);
       return (await r.json()).filter((row) => !queue[`${table}:${row.id}`]);
     };
-    const [sets, notes] = await Promise.all([get("lift_sets"), get("lift_notes")]);
+    const [sets, notes, recovery] = await Promise.all([get("lift_sets"), get("lift_notes"),
+      // a failed recovery fetch must not cost the set/note restore
+      get("lift_recovery").catch(() => [])]);
     for (const s of sets) {
       const p = {};
       /* Pre-migration rows have result=null and only `done` to go on; a ticked one
@@ -374,9 +389,11 @@ async function pullLog() {
       if (res) p.result = res;
       if (s.actual_reps != null && String(s.actual_reps) !== String(s.planned_reps)) p.reps = String(s.actual_reps);
       if (s.actual_weight != null && String(s.actual_weight) !== String(s.planned_weight)) p.weight = String(s.actual_weight);
+      if (s.rir != null) p.rir = s.rir;
       draft[s.id] = { ...(draft[s.id] || {}), ...p };
     }
     for (const n of notes) if (n.body) draft[n.id] = { ...(draft[n.id] || {}), body: n.body };
+    for (const r of recovery) draft[r.id] = { ...(draft[r.id] || {}), rating: r.rating };
     localStorage.setItem(LS.draft, JSON.stringify(draft));
     if (state.tab !== "weight") render();
   } catch (_) { /* local draft remains */ }
@@ -472,6 +489,8 @@ const setKey = (week, day, ei, si) => `${mesoKey()}-w${week}-${day}-e${ei}-s${si
 const noteKey = (week, day, ei) =>
   ei === undefined ? `${mesoKey()}-note-w${week}-${day}`
                    : `${mesoKey()}-note-w${week}-${day}-e${ei}`;
+const recKey = (week, day, muscle) =>
+  `${mesoKey()}-w${week}-${day}-${muscle.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
 /* ---------------- row builders ---------------- */
 function setRow(week, day, ei, si) {
@@ -490,7 +509,18 @@ function setRow(week, day, ei, si) {
     // did not count. A missed set keeps its actual reps/weight — the attempt is
     // real data, it just is not a completion.
     done: st.result === "made", result: st.result || null,
+    // 0–4 (4 = "4+"), only ever picked on a RIR slot's last set. Sent as null on every
+    // other row so a batched upsert carries the same keys on every object.
+    rir: st.rir ?? null,
     ts: new Date().toISOString(),
+  };
+}
+function recoveryRow(week, day, muscle) {
+  const d = PROGRAM.weeks[week].days[day];
+  const id = recKey(week, day, muscle);
+  return {
+    id, meso: PROGRAM.meso, session_date: d.date, week: +week, day, muscle,
+    rating: (draft[id] || {}).rating || null, ts: new Date().toISOString(),
   };
 }
 function noteRow(week, day, scope, ei) {
@@ -665,6 +695,19 @@ function stepper(kind, planned, get, set) {
   wrap.addEventListener("repaint", paint);
   paint();
   return wrap;
+}
+
+/* One-tap pick row (spec 10-25): RIR on a slot's last set, and each muscle in the recovery
+   card. A tap picks, a second tap on the same chip clears it back to null. */
+function pickRow(label, options, get, set) {
+  const paint = () => btns.forEach((b, i) => {
+    b.classList.toggle("active", get() === options[i][1]);
+    b.setAttribute("aria-pressed", String(get() === options[i][1]));
+  });
+  const btns = options.map(([text, value]) => h("button", { type: "button",
+    onclick: () => { set(get() === value ? null : value); paint(); } }, text));
+  paint();
+  return h("div", { class: "pick" }, h("span", { class: "pick-lbl" }, label), btns);
 }
 
 function pickDefault() {
@@ -872,6 +915,19 @@ function render() {
      Supabase is keyed on it (setKey/noteKey), so regrouping must never renumber it.
      Pre-Meso-3 program.json has no `group`; the ?? falls back to the name and every
      panel holds exactly one slot, i.e. the old rendering, with no migration. */
+  /* Recovery check (spec 10-25), one card above panel 01: how each muscle trained today
+     came back since its last session. It is the add-a-set rule's evidence, which the
+     headless weekly close otherwise infers from loads. A program.json without `muscles`
+     renders no card, i.e. the screen as it was. */
+  if (day.muscles?.length) main.append(h("section", { id: "recovery" },
+    h("h2", null, "Since you last trained it"),
+    day.muscles.map((m) => {
+      const id = recKey(state.week, state.day, m);
+      return pickRow(m, [["Sore", "sore"], ["Fine", "fine"], ["Strong", "strong"]],
+        () => (draft[id] || {}).rating ?? null,
+        (v) => { saveDraft(id, { rating: v }); enqueue("lift_recovery", recoveryRow(state.week, state.day, m)); });
+    })));
+
   const panels = [];
   day.exercises.forEach((ex, ei) => {
     const g = ex.group ?? ex.name;
@@ -933,9 +989,16 @@ function render() {
               ex.cue ? h("span", { class: "cue" }, ex.cue) : null)
           : null,
         h("div", { class: "sets" },
-        ex.sets.map((s, si) => {
+        ex.sets.flatMap((s, si) => {
           const id = setKey(state.week, state.day, ei, si);
           const st = draft[id] || {};
+          /* RIR chips under a RIR slot's LAST set, shown while it is made (spec 10-25).
+             Unticking hides them but keeps the pick; it still rides on the set row. */
+          const rirRow = ex.rir && si === ex.sets.length - 1
+            ? pickRow("RIR", [["0", 0], ["1", 1], ["2", 2], ["3", 3], ["4+", 4]],
+                () => (draft[id] || {}).rir ?? null,
+                (v) => { saveDraft(id, { rir: v }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); })
+            : null;
           /* Tri-state tick (Andrew, 2026-09-12): blank → made → missed → blank.
              One control, because the row has no horizontal room for a second
              button and the third tap is a correction, not a routine move. */
@@ -947,6 +1010,7 @@ function render() {
             tick.setAttribute("aria-label",
               `Set ${si + 1}: ${res || "not logged"} — tap to change`);
             tick.setAttribute("aria-pressed", String(!!res));
+            if (rirRow) rirRow.classList.toggle("hide", res !== "made");
           };
           tick.onclick = () => {
             const st0 = draft[id] || {};
@@ -989,7 +1053,7 @@ function render() {
               () => (draft[id] || {}).reps,
               (v) => { saveDraft(id, { reps: v }); enqueue("lift_sets", setRow(state.week, state.day, ei, si)); }));
           paint(st.result || null);
-          return row;
+          return rirRow ? [row, rirRow] : row;
         })))),
       missLbl, ta);
     const isComplete = () => panel.items.every(({ ex, ei }) => ex.sets.every((_, si) =>
@@ -1023,7 +1087,7 @@ function renderLogin(app) {
 }
 
 /* ---------------- boot ---------------- */
-const BUILD = "liftos-no-rest-clock";
+const BUILD = "liftos-rir-recovery";
 
 /* One-time: retire pre-meso-prefix draft keys ("w1-Mon-e0-s0", "note-w1-Mon").
    They belong to Meso 1 and would otherwise render as this meso's ticks/loads
